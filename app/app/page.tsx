@@ -38,9 +38,25 @@ export default async function HomePage({ searchParams }: Props) {
             <span className="text-2xl">☯</span>
             <h1 className="text-xl font-bold text-amber-900">名字评测</h1>
           </div>
-          <Link href="/history" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
-            历史记录
-          </Link>
+          <div className="flex items-center gap-2">
+            <div className="flex rounded-lg border overflow-hidden text-sm">
+              <Link
+                href="/"
+                className="px-3 py-1.5 bg-amber-700 text-white font-medium"
+              >
+                人名评测
+              </Link>
+              <Link
+                href="/company"
+                className="px-3 py-1.5 bg-white text-muted-foreground hover:bg-muted/50 transition-colors"
+              >
+                公司评测
+              </Link>
+            </div>
+            <Link href="/history" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
+              历史记录
+            </Link>
+          </div>
         </div>
       </header>
 

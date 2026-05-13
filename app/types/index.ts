@@ -1,8 +1,9 @@
 export interface NameInput {
   surname: string;
   givenName: string;
-  birthDate: string; // ISO date string
+  birthDate: string; // ISO date string，直接选生肖时为空字符串
   isLunar: boolean;
+  zodiacOverride?: string; // 直接选生肖时使用，优先于 birthDate 推算
   fatherSurname?: string;
   fatherZodiac?: string;
   motherSurname?: string;
@@ -45,7 +46,7 @@ export interface Hexagram {
   symbol: string; // six-line representation
 }
 
-export type LifeStage = "早年" | "中年" | "晚年";
+export type LifeStage = "早年" | "中年" | "晚年" | "早期" | "中期" | "后期";
 
 export interface PlumBlossomStage {
   stage: LifeStage;
@@ -110,4 +111,54 @@ export interface AnalysisResult {
   strokeAnalysis: StrokeAnalysis;
   plumBlossom: PlumBlossomAnalysis;
   energyAnalysis: EnergyAnalysis;
+}
+
+// ── 公司评测相关类型 ────────────────────────────────────────
+
+export interface CompanyInput {
+  companyName: string;
+  founderName: string;
+  partnerNames: string[];
+}
+
+export interface CompanyStrokeAnalysis {
+  chars: StrokeResult[];
+  totalStrokes: number;
+}
+
+export type CompanyEnergyFieldType = "company_char" | "company_total" | "founder" | "partner";
+
+export interface CompanyEnergyPoint {
+  key: string;
+  label: string;
+  mapValue: string;
+  meaning: string;
+  value: number;
+  fieldType: CompanyEnergyFieldType;
+  tianGan: string;
+  diZhi: string;
+  diZhiWuXing: WuXing;
+  diZhiFortune: EnergyFortune;
+  diZhiRelation: string;
+  bagua: number;
+  nineStar: NineStarName | null;
+  nineStarWuXing: WuXing | null;
+  nineStarSelfFortune: "吉" | "凶" | null;
+  nineStarFortune: EnergyFortune | null;
+}
+
+export interface CompanyEnergyAnalysis {
+  zongGeValue: number;
+  zongGeDiZhi: string;
+  zongGeDiZhiWuXing: WuXing;
+  zongGeBagua: number;
+  zongGeNineStarWuXing: WuXing;
+  points: CompanyEnergyPoint[];
+}
+
+export interface CompanyAnalysisResult {
+  input: CompanyInput;
+  strokeAnalysis: CompanyStrokeAnalysis;
+  plumBlossom: PlumBlossomAnalysis;
+  energyAnalysis: CompanyEnergyAnalysis;
 }

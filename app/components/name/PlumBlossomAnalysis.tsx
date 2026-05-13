@@ -21,15 +21,17 @@ const FORTUNE_COLOR: Record<string, string> = {
 
 interface Props {
   data: PlumBlossomType;
+  isCompany?: boolean;
 }
 
-export function PlumBlossomCard({ data }: Props) {
+export function PlumBlossomCard({ data, isCompany }: Props) {
   return (
     <Card>
       <CardHeader>
         <CardTitle>二、梅花易数</CardTitle>
         <p className="text-sm text-muted-foreground">
-          生肖：{data.zodiac} · 动爻：第 {data.movingYao} 爻 · 上卦：{data.upperGua} · 下卦：{data.lowerGua}
+          {!isCompany && <>生肖：{data.zodiac} · </>}
+          动爻：第 {data.movingYao} 爻 · 上卦：{data.upperGua} · 下卦：{data.lowerGua}
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -49,7 +51,7 @@ export function PlumBlossomCard({ data }: Props) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>人生阶段</TableHead>
+              <TableHead>{isCompany ? "发展阶段" : "人生阶段"}</TableHead>
               <TableHead>梅花阶段</TableHead>
               <TableHead>梅花卦</TableHead>
               <TableHead>体用区分</TableHead>

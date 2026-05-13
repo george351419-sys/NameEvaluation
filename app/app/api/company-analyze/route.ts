@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { streamInterpretation } from "@/lib/claude";
-import type { AnalysisResult } from "@/types";
+import { buildCompanyUserPrompt, COMPANY_SYSTEM_PROMPT } from "@/lib/promptsCompany";
+import type { CompanyAnalysisResult } from "@/types";
 
 export async function POST(request: NextRequest) {
   try {
-    const data = (await request.json()) as AnalysisResult;
+    const data = (await request.json()) as CompanyAnalysisResult;
 
     const provider = process.env.LLM_PROVIDER ?? "deepseek";
-    const apiKey = provider === "minimax" ? process.env.MINIMAX_API_KEY : process.env.DEEPSEEK_API_KEY;
+    const apiKey =
+      provider === "minimax" ? process.env.MINIMAX_API_KEY : process.env.DEEPSEEK_API_KEY;
     if (!apiKey) {
       return NextResponse.json(
         { error: `${provider.toUpperCase()}_API_KEY 未配置` },
@@ -15,7 +17,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const stream = await streamInterpretation(data);
+    const stream = await streamInterpretation(data, {
+      systemPrompt: COMPANY_SYSTEM_PROMPT,
+      userPrompt: buildCompanyUserPrompt(data),
+    });
 
     return new Response(stream, {
       headers: {
@@ -25,10 +30,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error) {
-    console.error("Analyze API error:", error);
-    return NextResponse.json(
-      { error: "生成解读时发生错误" },
-      { status: 500 }
-    );
+    console.error("Company analyze API error:", error);
+    return NextResponse.json({ error: "生成解读时发生错误" }, { status: 500 });
   }
 }

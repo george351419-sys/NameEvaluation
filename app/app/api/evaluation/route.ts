@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
         nameLast: nameParts.nameLast,
         birthDate: input.birthDate,
         isLunar: input.isLunar,
+        zodiacOverride: input.zodiacOverride || null,
         fatherSurname: input.fatherSurname || null,
         fatherZodiac: input.fatherZodiac || null,
         motherSurname: input.motherSurname || null,

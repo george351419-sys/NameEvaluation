@@ -14,9 +14,10 @@ export function analyze(input: NameInput): AnalysisResult {
   // 笔画分析
   const strokeAnalysis = analyzeStrokes(surname, givenName);
 
-  // 生肖（以立春为界）
-  const birthDateObj = new Date(birthDate + "T00:00:00");
-  const zodiac = getZodiacFromSolarDate(birthDateObj);
+  // 生肖：优先使用用户直接选择的生肖，否则根据生日推算（以立春为界）
+  const zodiac: ZodiacAnimal = input.zodiacOverride
+    ? (input.zodiacOverride as ZodiacAnimal)
+    : getZodiacFromSolarDate(new Date(birthDate + "T00:00:00"));
 
   // 各部分笔画数（nameLastStrokes 为 null 表示无"字"，如单字名）
   const surnameStrokes = getTotalStrokes(surname);

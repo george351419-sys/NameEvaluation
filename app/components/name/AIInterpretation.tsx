@@ -3,14 +3,22 @@
 import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { AnalysisResult } from "@/types";
 
 interface Props {
-  analysisResult: AnalysisResult;
+  analysisResult: object;
   evaluationId: string;
+  modelName?: string;
+  apiEndpoint?: string;
+  saveEndpoint?: string;
 }
 
-export function AIInterpretation({ analysisResult, evaluationId }: Props) {
+export function AIInterpretation({
+  analysisResult,
+  evaluationId,
+  modelName = "AI",
+  apiEndpoint = "/api/analyze",
+  saveEndpoint,
+}: Props) {
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
@@ -22,7 +30,7 @@ export function AIInterpretation({ analysisResult, evaluationId }: Props) {
     setDone(false);
 
     try {
-      const res = await fetch("/api/analyze", {
+      const res = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(analysisResult),
@@ -45,7 +53,7 @@ export function AIInterpretation({ analysisResult, evaluationId }: Props) {
       }
 
       // 保存解读到数据库
-      await fetch(`/api/evaluation/${evaluationId}`, {
+      await fetch(saveEndpoint ?? `/api/evaluation/${evaluationId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ interpretation: text }),
@@ -73,7 +81,7 @@ export function AIInterpretation({ analysisResult, evaluationId }: Props) {
         <div>
           <CardTitle>四、AI 命理解读</CardTitle>
           <p className="text-sm text-muted-foreground mt-1">
-            由 Claude AI 基于三大模块排盘结果生成个性化解读
+            由 {modelName} 基于三大模块排盘结果生成个性化解读
           </p>
         </div>
         {done && (

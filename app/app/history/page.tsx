@@ -2,22 +2,33 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { HistoryMultiSelect } from "@/components/name/HistoryMultiSelect";
+import { HistoryTabs } from "@/components/name/HistoryTabs";
 
 export const dynamic = "force-dynamic";
 
 export default async function HistoryPage() {
-  const evaluations = await prisma.evaluation.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      surname: true,
-      givenName: true,
-      birthDate: true,
-      isLunar: true,
-      createdAt: true,
-    },
-  });
+  const [evaluations, companyEvaluations] = await Promise.all([
+    prisma.evaluation.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        surname: true,
+        givenName: true,
+        birthDate: true,
+        isLunar: true,
+        createdAt: true,
+      },
+    }),
+    prisma.companyEvaluation.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        companyName: true,
+        founderName: true,
+        createdAt: true,
+      },
+    }),
+  ]);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
@@ -34,7 +45,10 @@ export default async function HistoryPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8">
-        <HistoryMultiSelect evaluations={evaluations} />
+        <HistoryTabs
+          personalEvaluations={evaluations}
+          companyEvaluations={companyEvaluations}
+        />
       </main>
     </div>
   );

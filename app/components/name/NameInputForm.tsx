@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,6 +23,7 @@ const DEFAULT_FORM: NameInput = {
   givenName: "",
   birthDate: "",
   isLunar: false,
+  zodiacOverride: "",
   fatherSurname: "",
   fatherZodiac: "",
   motherSurname: "",
@@ -31,16 +32,19 @@ const DEFAULT_FORM: NameInput = {
 };
 
 export function NameInputForm({ initialInput }: Props) {
+  const router = useRouter();
   const [form, setForm] = useState<NameInput>(initialInput ?? DEFAULT_FORM);
+  // birthMode: 用生日推算生肖 or 直接选生肖
+  const [birthMode, setBirthMode] = useState<"date" | "zodiac">(
+    initialInput?.zodiacOverride ? "zodiac" : "date"
+  );
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [savedId, setSavedId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const update = (key: keyof NameInput, value: string | boolean) => {
     setResult(null);
-    setSavedId(null);
     setForm((prev) => {
       const next = { ...prev, [key]: value };
       if (key === "surname" && (prev.fatherSurname === "" || prev.fatherSurname === prev.surname)) {
@@ -50,11 +54,25 @@ export function NameInputForm({ initialInput }: Props) {
     });
   };
 
+  const switchBirthMode = (mode: "date" | "zodiac") => {
+    setBirthMode(mode);
+    setResult(null);
+    if (mode === "zodiac") {
+      setForm((prev) => ({ ...prev, birthDate: "", isLunar: false }));
+    } else {
+      setForm((prev) => ({ ...prev, zodiacOverride: "" }));
+    }
+  };
+
+  const canSubmit =
+    !!form.surname &&
+    !!form.givenName &&
+    (birthMode === "date" ? !!form.birthDate : !!form.zodiacOverride);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.surname || !form.givenName || !form.birthDate) return;
+    if (!canSubmit) return;
     setLoading(true);
-    setSavedId(null);
     try {
       const res = await fetch("/api/calculate", {
         method: "POST",
@@ -79,7 +97,9 @@ export function NameInputForm({ initialInput }: Props) {
         body: JSON.stringify({ result }),
       });
       const data = await res.json();
-      if (data.id) setSavedId(data.id);
+      if (data.id) {
+        router.push(`/result/${data.id}`);
+      }
     } finally {
       setSaving(false);
     }
@@ -127,25 +147,69 @@ export function NameInputForm({ initialInput }: Props) {
               </div>
             </div>
 
+            {/* 出生信息：双 Tab 切换 */}
             <div className="space-y-2">
               <Label>
-                出生日期 <span className="text-red-500">*</span>
+                出生信息 <span className="text-red-500">*</span>
               </Label>
-              <Tabs
-                value={form.isLunar ? "lunar" : "solar"}
-                onValueChange={(v) => update("isLunar", v === "lunar")}
-              >
-                <TabsList className="mb-2">
-                  <TabsTrigger value="solar">阳历</TabsTrigger>
-                  <TabsTrigger value="lunar">农历</TabsTrigger>
-                </TabsList>
-              </Tabs>
-              <Input
-                type="date"
-                value={form.birthDate}
-                onChange={(e) => update("birthDate", e.target.value)}
-                required
-              />
+              {/* 模式切换 */}
+              <div className="flex rounded-lg border overflow-hidden w-fit">
+                <button
+                  type="button"
+                  onClick={() => switchBirthMode("date")}
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors ${
+                    birthMode === "date"
+                      ? "bg-amber-700 text-white"
+                      : "bg-white text-muted-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  输入生日
+                </button>
+                <button
+                  type="button"
+                  onClick={() => switchBirthMode("zodiac")}
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors border-l ${
+                    birthMode === "zodiac"
+                      ? "bg-amber-700 text-white"
+                      : "bg-white text-muted-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  直接选生肖
+                </button>
+              </div>
+
+              {birthMode === "date" ? (
+                <div className="space-y-2">
+                  <Tabs
+                    value={form.isLunar ? "lunar" : "solar"}
+                    onValueChange={(v) => update("isLunar", v === "lunar")}
+                  >
+                    <TabsList>
+                      <TabsTrigger value="solar">阳历</TabsTrigger>
+                      <TabsTrigger value="lunar">农历</TabsTrigger>
+                    </TabsList>
+                  </Tabs>
+                  <Input
+                    type="date"
+                    value={form.birthDate}
+                    onChange={(e) => update("birthDate", e.target.value)}
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    系统将根据生日（以立春为界）自动判断生肖
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <ZodiacSelect
+                    value={form.zodiacOverride ?? ""}
+                    onChange={(v) => update("zodiacOverride", v)}
+                    placeholder="选择生肖属相"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    不知道具体生日时可直接选生肖
+                  </p>
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -198,7 +262,7 @@ export function NameInputForm({ initialInput }: Props) {
         <Button
           type="submit"
           className="w-full h-12 text-base"
-          disabled={loading || !form.surname || !form.givenName || !form.birthDate}
+          disabled={loading || !canSubmit}
         >
           {loading ? "分析中..." : "开始评测"}
         </Button>
@@ -211,21 +275,9 @@ export function NameInputForm({ initialInput }: Props) {
             <h2 className="text-xl font-bold text-amber-900">
               {result.input.surname}{result.input.givenName} 命理排盘
             </h2>
-            {!savedId ? (
-              <Button onClick={handleSave} disabled={saving} variant="default" size="sm">
-                {saving ? "保存中..." : "保存记录"}
-              </Button>
-            ) : (
-              <div className="flex items-center gap-3 text-sm">
-                <span className="text-green-700 font-medium">✓ 已保存</span>
-                <Link
-                  href={`/result/${savedId}`}
-                  className="text-amber-700 underline underline-offset-2 hover:text-amber-900"
-                >
-                  查看完整报告（含AI解读）→
-                </Link>
-              </div>
-            )}
+            <Button onClick={handleSave} disabled={saving} variant="default" size="sm">
+              {saving ? "保存中..." : "保存并查看完整报告 →"}
+            </Button>
           </div>
 
           <StrokeAnalysisCard data={result.strokeAnalysis} />
@@ -238,20 +290,11 @@ export function NameInputForm({ initialInput }: Props) {
           {/* 底部保存区 */}
           <div className="rounded-lg border bg-muted/30 p-4 flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              排盘结果仅在本页展示。保存后可随时查看完整报告及 AI 命理解读。
+              保存后跳转至完整报告页，可获取 AI 命理解读及分享图片。
             </p>
-            {!savedId ? (
-              <Button onClick={handleSave} disabled={saving} className="ml-4 shrink-0">
-                {saving ? "保存中..." : "保存记录"}
-              </Button>
-            ) : (
-              <Link
-                href={`/result/${savedId}`}
-                className="ml-4 shrink-0 inline-flex items-center justify-center rounded-md bg-amber-700 px-4 py-2 text-sm font-medium text-white hover:bg-amber-800 transition-colors"
-              >
-                查看完整报告 →
-              </Link>
-            )}
+            <Button onClick={handleSave} disabled={saving} className="ml-4 shrink-0">
+              {saving ? "保存中..." : "保存并查看完整报告 →"}
+            </Button>
           </div>
         </div>
       )}

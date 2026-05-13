@@ -7,6 +7,7 @@ import { PlumBlossomCard } from "@/components/name/PlumBlossomAnalysis";
 import { EnergyMatrixCard } from "@/components/name/EnergyMatrix";
 import { AIInterpretation } from "@/components/name/AIInterpretation";
 import { ComparePickerButton } from "@/components/name/ComparePickerButton";
+import { ShareButton } from "@/components/name/ShareButton";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +27,7 @@ export default async function ResultPage({ params }: Props) {
     givenName: evaluation.givenName,
     birthDate: evaluation.birthDate,
     isLunar: evaluation.isLunar,
+    zodiacOverride: evaluation.zodiacOverride ?? undefined,
     fatherSurname: evaluation.fatherSurname ?? undefined,
     fatherZodiac: evaluation.fatherZodiac ?? undefined,
     motherSurname: evaluation.motherSurname ?? undefined,
@@ -52,6 +54,7 @@ export default async function ResultPage({ params }: Props) {
             <Link href="/history" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
               ← 返回记录
             </Link>
+            <ShareButton name={`${evaluation.surname}${evaluation.givenName}`} />
             <ComparePickerButton currentId={id} />
             <Link href={`/?edit=${id}`} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
               编辑重算
@@ -67,7 +70,9 @@ export default async function ResultPage({ params }: Props) {
         <StrokeAnalysisCard data={result.strokeAnalysis} />
         <PlumBlossomCard data={result.plumBlossom} />
         <EnergyMatrixCard data={result.energyAnalysis} />
-        <AIInterpretation analysisResult={result} evaluationId={id} />
+        <AIInterpretation analysisResult={result} evaluationId={id} modelName={
+          process.env.LLM_PROVIDER === "minimax" ? "MiniMax" : "DeepSeek"
+        } />
       </main>
     </div>
   );

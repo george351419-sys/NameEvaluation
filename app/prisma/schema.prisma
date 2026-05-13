@@ -16,11 +16,24 @@ model Evaluation {
   nameLast      String
   birthDate     String
   isLunar       Boolean  @default(false)
+  zodiacOverride String?
   fatherSurname String?
   fatherZodiac  String?
   motherSurname String?
   motherZodiac  String?
   childZodiac   String?
+  resultJson    String
+  interpretation String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model CompanyEvaluation {
+  id            String   @id @default(cuid())
+  companyName   String
+  founderName   String
+  founderZodiac String?
+  partnerNames  String
   resultJson    String
   interpretation String?
   createdAt     DateTime @default(now())
