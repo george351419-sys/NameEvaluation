@@ -7,7 +7,7 @@ export const ZODIAC_ANIMALS: ZodiacAnimal[] = [
 ];
 
 // 十二生肖与序号（1-12）
-const ZODIAC_NUMBER: Record<ZodiacAnimal, number> = {
+export const ZODIAC_NUMBER: Record<ZodiacAnimal, number> = {
   鼠: 1, 牛: 2, 虎: 3, 兔: 4, 龙: 5, 蛇: 6,
   马: 7, 羊: 8, 猴: 9, 鸡: 10, 狗: 11, 猪: 12,
 };

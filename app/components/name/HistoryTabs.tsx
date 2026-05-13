@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { HistoryMultiSelect } from "./HistoryMultiSelect";
 import { DeleteButton } from "./DeleteButton";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface PersonalItem {
   id: string;
@@ -26,9 +27,22 @@ interface CompanyItem {
   createdAt: Date;
 }
 
+interface NamingItem {
+  id: string;
+  surname: string;
+  ownZodiac: string;
+  fatherSurname: string;
+  fatherZodiac: string | null;
+  motherSurname: string;
+  motherZodiac: string;
+  createdAt: Date;
+}
+
 interface Props {
   personalEvaluations: PersonalItem[];
   companyEvaluations: CompanyItem[];
+  namingEvaluations: NamingItem[];
+  defaultTab?: string;
 }
 
 function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
@@ -66,7 +80,6 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
 
   return (
     <>
-      {/* 顶部操作栏 */}
       {!compareMode ? (
         <div className="mb-5 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-4 py-3">
           <div>
@@ -104,7 +117,6 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
               </Button>
             </div>
           </div>
-
           {selected.length > 0 && (
             <div className="mt-2 flex gap-2 flex-wrap">
               {selected.map((id, idx) => {
@@ -122,7 +134,6 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
         </div>
       )}
 
-      {/* 记录列表 */}
       <div className="space-y-3">
         {evaluations.map((ev) => {
           const isChecked = selected.includes(ev.id);
@@ -162,7 +173,6 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
                     </p>
                   </div>
                 </div>
-
                 {!compareMode && (
                   <div className="flex gap-2">
                     <Link
@@ -184,15 +194,67 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
   );
 }
 
-export function HistoryTabs({ personalEvaluations, companyEvaluations }: Props) {
+function NamingHistoryList({ evaluations }: { evaluations: NamingItem[] }) {
+  if (evaluations.length === 0) {
+    return (
+      <div className="text-center py-16 text-muted-foreground">
+        <p>暂无命名建议记录</p>
+        <Link href="/naming" className={cn(buttonVariants(), "mt-4 inline-flex")}>
+          开始第一次命名分析
+        </Link>
+      </div>
+    );
+  }
+
   return (
-    <Tabs defaultValue="personal">
+    <div className="space-y-3">
+      {evaluations.map((ev) => (
+        <Card key={ev.id} className="hover:shadow-md transition-shadow">
+          <CardContent className="flex items-center justify-between py-4">
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-lg font-bold text-amber-900">{ev.surname}姓</span>
+                <span className="text-sm text-muted-foreground">属相：{ev.ownZodiac}</span>
+                <span className="text-sm text-muted-foreground">
+                  父{ev.fatherSurname}
+                  {ev.fatherZodiac ? `·${ev.fatherZodiac}` : ""}
+                </span>
+                <span className="text-sm text-muted-foreground">
+                  母{ev.motherSurname}·{ev.motherZodiac}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {new Date(ev.createdAt).toLocaleString("zh-CN")}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <Link
+                href={`/naming/result/${ev.id}`}
+                className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
+              >
+                查看
+              </Link>
+              <DeleteButton id={ev.id} deleteUrl={`/api/naming-save/${ev.id}`} />
+            </div>
+          </CardContent>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export function HistoryTabs({ personalEvaluations, companyEvaluations, namingEvaluations, defaultTab }: Props) {
+  return (
+    <Tabs defaultValue={defaultTab ?? "personal"}>
       <TabsList className="w-full">
         <TabsTrigger value="personal" className="flex-1">
           人名记录（{personalEvaluations.length}）
         </TabsTrigger>
         <TabsTrigger value="company" className="flex-1">
           公司记录（{companyEvaluations.length}）
+        </TabsTrigger>
+        <TabsTrigger value="naming" className="flex-1">
+          命名建议（{namingEvaluations.length}）
         </TabsTrigger>
       </TabsList>
 
@@ -202,6 +264,10 @@ export function HistoryTabs({ personalEvaluations, companyEvaluations }: Props) 
 
       <TabsContent value="company" className="mt-6">
         <CompanyHistoryList evaluations={companyEvaluations} />
+      </TabsContent>
+
+      <TabsContent value="naming" className="mt-6">
+        <NamingHistoryList evaluations={namingEvaluations} />
       </TabsContent>
     </Tabs>
   );

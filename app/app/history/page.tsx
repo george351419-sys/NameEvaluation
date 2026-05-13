@@ -6,8 +6,13 @@ import { HistoryTabs } from "@/components/name/HistoryTabs";
 
 export const dynamic = "force-dynamic";
 
-export default async function HistoryPage() {
-  const [evaluations, companyEvaluations] = await Promise.all([
+interface Props {
+  searchParams: Promise<{ tab?: string }>;
+}
+
+export default async function HistoryPage({ searchParams }: Props) {
+  const { tab } = await searchParams;
+  const [evaluations, companyEvaluations, namingEvaluations] = await Promise.all([
     prisma.evaluation.findMany({
       orderBy: { createdAt: "desc" },
       select: {
@@ -28,6 +33,19 @@ export default async function HistoryPage() {
         createdAt: true,
       },
     }),
+    prisma.namingEvaluation.findMany({
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        surname: true,
+        ownZodiac: true,
+        fatherSurname: true,
+        fatherZodiac: true,
+        motherSurname: true,
+        motherZodiac: true,
+        createdAt: true,
+      },
+    }),
   ]);
 
   return (
@@ -38,7 +56,7 @@ export default async function HistoryPage() {
             <span className="text-2xl">☯</span>
             <h1 className="text-xl font-bold text-amber-900">历史评测记录</h1>
           </div>
-          <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
+          <Link href="/" className={cn(buttonVariants({ variant: "default", size: "sm" }), "bg-amber-700 hover:bg-amber-800 text-white")}>
             新评测
           </Link>
         </div>
@@ -48,6 +66,8 @@ export default async function HistoryPage() {
         <HistoryTabs
           personalEvaluations={evaluations}
           companyEvaluations={companyEvaluations}
+          namingEvaluations={namingEvaluations}
+          defaultTab={tab}
         />
       </main>
     </div>

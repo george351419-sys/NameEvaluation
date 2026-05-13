@@ -39,3 +39,16 @@ model CompanyEvaluation {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
+
+model NamingEvaluation {
+  id            String   @id @default(cuid())
+  surname       String
+  ownZodiac     String
+  fatherSurname String
+  fatherZodiac  String?
+  motherSurname String
+  motherZodiac  String
+  resultJson    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}

@@ -47,8 +47,8 @@ export default async function CompanyResultPage({ params }: Props) {
             </div>
           </div>
           <div className="flex gap-2">
-            <Link href="/company" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
-              ← 返回
+            <Link href="/history?tab=company" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
+              ← 返回记录
             </Link>
             <ShareButton name={ev.companyName} />
             <Link href="/company" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>

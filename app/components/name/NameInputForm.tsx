@@ -36,7 +36,7 @@ export function NameInputForm({ initialInput }: Props) {
   const [form, setForm] = useState<NameInput>(initialInput ?? DEFAULT_FORM);
   // birthMode: 用生日推算生肖 or 直接选生肖
   const [birthMode, setBirthMode] = useState<"date" | "zodiac">(
-    initialInput?.zodiacOverride ? "zodiac" : "date"
+    initialInput?.birthDate ? "date" : "zodiac"
   );
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
@@ -156,25 +156,25 @@ export function NameInputForm({ initialInput }: Props) {
               <div className="flex rounded-lg border overflow-hidden w-fit">
                 <button
                   type="button"
-                  onClick={() => switchBirthMode("date")}
-                  className={`px-4 py-1.5 text-sm font-medium transition-colors ${
-                    birthMode === "date"
-                      ? "bg-amber-700 text-white"
-                      : "bg-white text-muted-foreground hover:bg-muted/50"
-                  }`}
-                >
-                  输入生日
-                </button>
-                <button
-                  type="button"
                   onClick={() => switchBirthMode("zodiac")}
-                  className={`px-4 py-1.5 text-sm font-medium transition-colors border-l ${
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors ${
                     birthMode === "zodiac"
                       ? "bg-amber-700 text-white"
                       : "bg-white text-muted-foreground hover:bg-muted/50"
                   }`}
                 >
                   直接选生肖
+                </button>
+                <button
+                  type="button"
+                  onClick={() => switchBirthMode("date")}
+                  className={`px-4 py-1.5 text-sm font-medium transition-colors border-l ${
+                    birthMode === "date"
+                      ? "bg-amber-700 text-white"
+                      : "bg-white text-muted-foreground hover:bg-muted/50"
+                  }`}
+                >
+                  输入生日
                 </button>
               </div>
 

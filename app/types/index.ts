@@ -113,6 +113,52 @@ export interface AnalysisResult {
   energyAnalysis: EnergyAnalysis;
 }
 
+// ── 命名建议相关类型 ────────────────────────────────────────
+
+export interface NamingInput {
+  surname: string;
+  ownZodiac: string;
+  fatherSurname: string;
+  fatherZodiac?: string;
+  motherSurname: string;
+  motherZodiac: string;
+}
+
+export interface NamingCandidatePoint {
+  key: string;
+  label: string;
+  value: number;
+  diZhiFortune: EnergyFortune;
+}
+
+export interface NamingCandidateRow {
+  x: number;
+  points: NamingCandidatePoint[];
+  fortuneCount: Partial<Record<EnergyFortune, number>>;
+}
+
+export interface NamingPlumCandidate {
+  x: number;
+  plumBlossom: PlumBlossomAnalysis;
+  fortuneCount: Partial<Record<string, number>>;
+}
+
+export interface NamingFinalItem {
+  x: number;
+  energyAnalysis: EnergyAnalysis;
+  plumBlossom: PlumBlossomAnalysis;
+}
+
+export interface NamingResult {
+  input: NamingInput;
+  surnameStrokes: number;
+  candidateRows: NamingCandidateRow[];
+  top3X: number[];
+  plumCandidates: NamingPlumCandidate[];
+  recommended: number[];
+  finalAnalysis: NamingFinalItem[];
+}
+
 // ── 公司评测相关类型 ────────────────────────────────────────
 
 export interface CompanyInput {
