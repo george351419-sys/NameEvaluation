@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,8 +22,8 @@ model Evaluation {
   motherSurname String?
   motherZodiac  String?
   childZodiac   String?
-  resultJson    String
-  interpretation String?
+  resultJson    String   @db.LongText
+  interpretation String? @db.LongText
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -34,8 +34,8 @@ model CompanyEvaluation {
   founderName   String
   founderZodiac String?
   partnerNames  String
-  resultJson    String
-  interpretation String?
+  resultJson    String   @db.LongText
+  interpretation String? @db.LongText
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
@@ -48,7 +48,7 @@ model NamingEvaluation {
   fatherZodiac  String?
   motherSurname String
   motherZodiac  String
-  resultJson    String
+  resultJson    String   @db.LongText
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
