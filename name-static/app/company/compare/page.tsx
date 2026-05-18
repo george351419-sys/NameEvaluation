@@ -1,76 +1,72 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { getCompanyEvaluation } from "@/lib/storage";
 import { analyzeCompany } from "@/lib/analyzeCompany";
 import { CompanyCompareView } from "@/components/name/CompanyCompareView";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { CompanyInput } from "@/types";
+import type { CompanyAnalysisResult } from "@/types";
 
-interface Props {
-  searchParams: Promise<{ a?: string; b?: string; c?: string }>;
-}
+function CompanyCompareContent() {
+  const searchParams = useSearchParams();
+  const a = searchParams.get("a") ?? "";
+  const b = searchParams.get("b") ?? "";
+  const c = searchParams.get("c") ?? "";
+  const [results, setResults] = useState<CompanyAnalysisResult[] | null>(null);
+  const [missing, setMissing] = useState(false);
 
-export default async function CompanyComparePage({ searchParams }: Props) {
-  const { a, b, c } = await searchParams;
-  if (!a || !b) notFound();
-
-  const ids = [a, b, ...(c ? [c] : [])];
-  const evs = await Promise.all(
-    ids.map((id) => prisma.companyEvaluation.findUnique({ where: { id } }))
-  );
-  if (evs.some((ev) => !ev)) notFound();
-
-  const results = evs.map((ev) => {
-    const input: CompanyInput = {
+  useEffect(() => {
+    if (!a || !b) { setMissing(true); return; }
+    const ids = [a, b, ...(c ? [c] : [])];
+    const evs = ids.map((id) => getCompanyEvaluation(id));
+    if (evs.some((ev) => !ev)) { setMissing(true); return; }
+    setResults(evs.map((ev) => analyzeCompany({
       companyName: ev!.companyName,
       founderName: ev!.founderName,
-      partnerNames: JSON.parse(ev!.partnerNames) as string[],
-    };
-    return { ev: ev!, result: analyzeCompany(input) };
-  });
+      partnerNames: ev!.partnerNames,
+    })));
+  }, [a, b, c]);
 
-  const [ra, rb, rc] = results;
+  if (missing) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-muted-foreground">
+        <p>找不到对比记录</p>
+        <Link href="/history?tab=company" className={cn(buttonVariants())}>返回历史记录</Link>
+      </div>
+    );
+  }
+
+  if (!results) {
+    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">加载中...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-2xl shrink-0">☯</span>
-            <div className="min-w-0">
-              <h1 className="text-xl font-bold text-amber-900 truncate">
-                {results.map((r) => r.ev.companyName).join(" vs ")} — 公司命理对比
-              </h1>
-              <p className="text-xs text-muted-foreground truncate">
-                {results.map((r) => `创始人：${r.ev.founderName}`).join(" / ")}
-              </p>
-            </div>
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">☯</span>
+            <h1 className="text-xl font-bold text-amber-900">公司名对比</h1>
           </div>
-          <div className="flex gap-2 ml-4 shrink-0 flex-wrap justify-end">
-            <Link href="/history" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
-              ← 返回记录
-            </Link>
-            {results.map((r, i) => (
-              <Link
-                key={ids[i]}
-                href={`/company/result/${ids[i]}`}
-                className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-              >
-                {r.ev.companyName} 报告
-              </Link>
-            ))}
-          </div>
+          <Link href="/history?tab=company" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
+            ← 返回历史
+          </Link>
         </div>
       </header>
-
-      <main className="max-w-6xl mx-auto px-4 py-8">
-        <CompanyCompareView
-          labelA={ra.ev.companyName} resultA={ra.result}
-          labelB={rb.ev.companyName} resultB={rb.result}
-          {...(rc ? { labelC: rc.ev.companyName, resultC: rc.result } : {})}
-        />
+      <main className="max-w-5xl mx-auto px-4 py-8">
+        <CompanyCompareView results={results} />
       </main>
     </div>
+  );
+}
+
+export default function CompanyComparePage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground">加载中...</div>}>
+      <CompanyCompareContent />
+    </Suspense>
   );
 }
