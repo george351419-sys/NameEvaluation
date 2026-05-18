@@ -13,6 +13,8 @@ import { PlumBlossomCard } from "./PlumBlossomAnalysis";
 import { EnergyMatrixCard } from "./EnergyMatrix";
 import { CompareInline } from "./CompareInline";
 import type { NameInput, AnalysisResult } from "@/types";
+import { analyze } from "@/lib/analyze";
+import { saveEvaluation } from "@/lib/storage";
 
 interface Props {
   initialInput?: NameInput;
@@ -74,32 +76,31 @@ export function NameInputForm({ initialInput }: Props) {
     if (!canSubmit) return;
     setLoading(true);
     try {
-      const res = await fetch("/api/calculate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      setResult(data.result);
+      const analysisResult = analyze(form);
+      setResult(analysisResult);
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 100);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!result) return;
     setSaving(true);
     try {
-      const res = await fetch("/api/evaluation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ result }),
+      const id = saveEvaluation({
+        surname: form.surname,
+        givenName: form.givenName,
+        birthDate: form.birthDate,
+        isLunar: form.isLunar,
+        zodiacOverride: form.zodiacOverride,
+        fatherSurname: form.fatherSurname,
+        fatherZodiac: form.fatherZodiac,
+        motherSurname: form.motherSurname,
+        motherZodiac: form.motherZodiac,
+        childZodiac: form.childZodiac,
       });
-      const data = await res.json();
-      if (data.id) {
-        router.push(`/result/${data.id}`);
-      }
+      router.push(`/result?id=${id}`);
     } finally {
       setSaving(false);
     }
