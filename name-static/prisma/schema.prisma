@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Evaluation {
+  id            String   @id @default(cuid())
+  name          String
+  surname       String
+  givenName     String
+  nameFirst     String
+  nameLast      String
+  birthDate     String
+  isLunar       Boolean  @default(false)
+  zodiacOverride String?
+  fatherSurname String?
+  fatherZodiac  String?
+  motherSurname String?
+  motherZodiac  String?
+  childZodiac   String?
+  resultJson    String
+  interpretation String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model CompanyEvaluation {
+  id            String   @id @default(cuid())
+  companyName   String
+  founderName   String
+  founderZodiac String?
+  partnerNames  String
+  resultJson    String
+  interpretation String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model NamingEvaluation {
+  id            String   @id @default(cuid())
+  surname       String
+  ownZodiac     String
+  fatherSurname String
+  fatherZodiac  String?
+  motherSurname String
+  motherZodiac  String
+  resultJson    String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
