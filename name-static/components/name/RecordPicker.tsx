@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { listEvaluations } from "@/lib/storage";
 
 interface EvaluationItem {
   id: string;
@@ -21,13 +22,9 @@ export function RecordPicker({ value, onChange, exclude }: Props) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/evaluation")
-      .then((r) => r.json())
-      .then((data: EvaluationItem[]) => {
-        setRecords(data);
-      })
-      .catch(() => setRecords([]))
-      .finally(() => setLoading(false));
+    const data = listEvaluations();
+    setRecords(data);
+    setLoading(false);
   }, []);
 
   const filtered = exclude ? records.filter((r) => r.id !== exclude) : records;

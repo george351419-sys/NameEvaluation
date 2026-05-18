@@ -1,22 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 
-export function DeleteButton({ id, deleteUrl }: { id: string; deleteUrl?: string }) {
-  const router = useRouter();
+interface Props {
+  id: string;
+  onDelete: (id: string) => void;
+}
+
+export function DeleteButton({ id, onDelete }: Props) {
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     if (!confirm("确认删除这条记录？")) return;
     setLoading(true);
-    try {
-      await fetch(deleteUrl ?? `/api/evaluation/${id}`, { method: "DELETE" });
-      router.refresh();
-    } finally {
-      setLoading(false);
-    }
+    onDelete(id);
+    setLoading(false);
   };
 
   return (
