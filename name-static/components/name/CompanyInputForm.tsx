@@ -10,6 +10,8 @@ import { CompanyStrokeAnalysisCard } from "./CompanyStrokeAnalysisCard";
 import { PlumBlossomCard } from "./PlumBlossomAnalysis";
 import { CompanyEnergyMatrixCard } from "./CompanyEnergyMatrixCard";
 import type { CompanyInput, CompanyAnalysisResult } from "@/types";
+import { analyzeCompany } from "@/lib/analyzeCompany";
+import { saveCompanyEvaluation } from "@/lib/storage";
 
 const DEFAULT_FORM: CompanyInput = {
   companyName: "",
@@ -23,7 +25,6 @@ export function CompanyInputForm() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<CompanyAnalysisResult | null>(null);
   const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState<string | null>(null);
 
   const canSubmit = !!form.companyName.trim() && !!form.founderName.trim();
 
@@ -56,37 +57,24 @@ export function CompanyInputForm() {
         ...form,
         partnerNames: form.partnerNames.filter((n) => n.trim()),
       };
-      const res = await fetch("/api/company-calculate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
-      setResult(data.result);
+      const analysisResult = analyzeCompany(payload);
+      setResult(analysisResult);
       setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!result) return;
     setSaving(true);
-    setSaveError(null);
     try {
-      const res = await fetch("/api/company-evaluate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ result }),
+      const id = saveCompanyEvaluation({
+        companyName: result.input.companyName,
+        founderName: result.input.founderName,
+        partnerNames: result.input.partnerNames,
       });
-      const data = await res.json();
-      if (data.id) {
-        router.push(`/company/result/${data.id}`);
-      } else {
-        setSaveError(data.error ?? "保存失败，请稍后重试");
-      }
-    } catch (e) {
-      setSaveError(e instanceof Error ? e.message : "网络错误，请稍后重试");
+      router.push(`/company/result?id=${id}`);
     } finally {
       setSaving(false);
     }
@@ -170,11 +158,6 @@ export function CompanyInputForm() {
               {saving ? "保存中..." : "保存并查看完整报告 →"}
             </Button>
           </div>
-          {saveError && (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-              保存失败：{saveError}
-            </div>
-          )}
 
           <CompanyStrokeAnalysisCard data={result.strokeAnalysis} />
           <PlumBlossomCard data={result.plumBlossom} isCompany />
