@@ -55,7 +55,7 @@ export default function NamingResultContent() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 py-8 space-y-4">
-        <NamingSuggestionResult result={result} />
+        <NamingSuggestionResult data={result} />
       </main>
     </div>
   );

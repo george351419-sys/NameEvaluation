@@ -16,6 +16,8 @@ function CompareContent() {
   const b = searchParams.get("b") ?? "";
   const c = searchParams.get("c") ?? "";
   const [results, setResults] = useState<AnalysisResult[] | null>(null);
+  const [evLabels, setEvLabels] = useState<string[]>([]);
+  const [evBirths, setEvBirths] = useState<string[]>([]);
   const [missing, setMissing] = useState(false);
 
   useEffect(() => {
@@ -23,6 +25,8 @@ function CompareContent() {
     const ids = [a, b, ...(c ? [c] : [])];
     const evs = ids.map((id) => getEvaluation(id));
     if (evs.some((ev) => !ev)) { setMissing(true); return; }
+    setEvLabels(evs.map((ev) => `${ev!.surname}${ev!.givenName}`));
+    setEvBirths(evs.map((ev) => ev!.birthDate));
     setResults(evs.map((ev) => analyze({
       surname: ev!.surname,
       givenName: ev!.givenName,
@@ -64,7 +68,17 @@ function CompareContent() {
         </div>
       </header>
       <main className="max-w-5xl mx-auto px-4 py-8">
-        <CompareView results={results} />
+        <CompareView
+          labelA={evLabels[0] ?? ""}
+          birthA={evBirths[0] ?? ""}
+          resultA={results[0]}
+          labelB={evLabels[1] ?? ""}
+          birthB={evBirths[1] ?? ""}
+          resultB={results[1]}
+          labelC={evLabels[2]}
+          birthC={evBirths[2]}
+          resultC={results[2]}
+        />
       </main>
     </div>
   );

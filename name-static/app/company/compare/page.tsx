@@ -57,7 +57,14 @@ function CompanyCompareContent() {
         </div>
       </header>
       <main className="max-w-5xl mx-auto px-4 py-8">
-        <CompanyCompareView results={results} />
+        <CompanyCompareView
+          labelA={a}
+          resultA={results[0]}
+          labelB={b}
+          resultB={results[1]}
+          labelC={c || undefined}
+          resultC={results[2]}
+        />
       </main>
     </div>
   );
