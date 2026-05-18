@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ZodiacSelect } from "./ZodiacSelect";
 import { NamingSuggestionResult } from "./NamingSuggestionResult";
 import type { NamingInput, NamingResult } from "@/types";
+import { suggestNaming } from "@/lib/namingSuggestion";
+import { saveNamingEvaluation } from "@/lib/storage";
 
 const DEFAULT_FORM: NamingInput = {
   surname: "",
@@ -26,7 +28,6 @@ export function NamingInputForm() {
   const [saving, setSaving] = useState(false);
   const [result, setResult] = useState<NamingResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [saveError, setSaveError] = useState<string | null>(null);
 
   const update = (key: keyof NamingInput, value: string) => {
     setResult(null);
@@ -47,45 +48,37 @@ export function NamingInputForm() {
     e.preventDefault();
     if (!canSubmit) return;
     setLoading(true);
-    setError(null);
     try {
-      const res = await fetch("/api/naming-suggest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.error ?? "计算失败");
-      } else {
-        setResult(data.result);
-        setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "网络错误");
+      const input: NamingInput = {
+        surname: form.surname,
+        ownZodiac: form.ownZodiac,
+        fatherSurname: form.fatherSurname,
+        fatherZodiac: form.fatherZodiac,
+        motherSurname: form.motherSurname,
+        motherZodiac: form.motherZodiac,
+      };
+      const namingResult = suggestNaming(input);
+      setResult(namingResult);
+      setTimeout(() => window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" }), 100);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!result) return;
     setSaving(true);
-    setSaveError(null);
     try {
-      const res = await fetch("/api/naming-save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ input: form, result }),
+      const id = saveNamingEvaluation({
+        surname: result.input.surname,
+        ownZodiac: result.input.ownZodiac,
+        fatherSurname: result.input.fatherSurname,
+        fatherZodiac: result.input.fatherZodiac,
+        motherSurname: result.input.motherSurname,
+        motherZodiac: result.input.motherZodiac,
+        resultJson: JSON.stringify(result),
       });
-      const data = await res.json();
-      if (!res.ok) {
-        setSaveError(data.error ?? "保存失败");
-      } else {
-        router.push(`/naming/result/${data.id}`);
-      }
-    } catch (e) {
-      setSaveError(e instanceof Error ? e.message : "网络错误");
+      router.push(`/naming/result?id=${id}`);
     } finally {
       setSaving(false);
     }
@@ -183,11 +176,6 @@ export function NamingInputForm() {
       {result && (
         <div className="space-y-6">
           <NamingSuggestionResult data={result} />
-          {saveError && (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
-              {saveError}
-            </div>
-          )}
           <Button
             onClick={handleSave}
             disabled={saving}
