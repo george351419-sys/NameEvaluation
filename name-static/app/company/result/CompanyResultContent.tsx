@@ -13,6 +13,7 @@ import { ShareButton } from "@/components/name/ShareButton";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { fortuneBadgeClass } from "@/lib/scoreUtils";
 import { generateCompanyRuleText } from "@/lib/ruleText";
 import type { CompanyAnalysisResult } from "@/types";
 
@@ -61,7 +62,7 @@ export default function CompanyResultContent() {
   const ruleText = generateCompanyRuleText(result);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdfaf5] to-[#efe8d8]">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -86,6 +87,16 @@ export default function CompanyResultContent() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+        <div className="rounded-2xl p-5 text-white flex items-center justify-between shadow-lg"
+          style={{ background: "linear-gradient(135deg, #8b653a 0%, #c4954a 100%)" }}>
+          <div>
+            <div className="text-xs opacity-70 tracking-widest mb-1">公司名评测</div>
+            <div className="text-2xl font-black">{evaluation.companyName}</div>
+          </div>
+          <div className="text-right">
+            <div className="text-xs opacity-60">创始人：{evaluation.founderName}</div>
+          </div>
+        </div>
         <CompanyStrokeAnalysisCard data={result.strokeAnalysis} />
         <PlumBlossomCard data={result.plumBlossom} />
         <CompanyEnergyMatrixCard data={result.energyAnalysis} />

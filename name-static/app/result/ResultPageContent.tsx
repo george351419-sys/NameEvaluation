@@ -15,6 +15,7 @@ import { ShareButton } from "@/components/name/ShareButton";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { AnalysisResult } from "@/types";
+import { calcScore, fortuneBadgeClass } from "@/lib/scoreUtils";
 
 export default function ResultPageContent() {
   const searchParams = useSearchParams();
@@ -56,7 +57,7 @@ export default function ResultPageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdfaf5] to-[#efe8d8]">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -71,7 +72,7 @@ export default function ResultPageContent() {
             </div>
           </div>
           <div className="flex gap-2 flex-wrap justify-end">
-            <Link href="/history" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
+            <Link href="/history" className={cn(buttonVariants({ variant: "default", size: "sm" }))} style={{ background: "linear-gradient(135deg, #8b653a, #c4954a)" }}>
               ← 返回记录
             </Link>
             <ShareButton name={`${evaluation.surname}${evaluation.givenName}`} />
@@ -84,6 +85,28 @@ export default function ResultPageContent() {
       </header>
 
       <main className="max-w-4xl mx-auto px-4 py-8 space-y-6">
+        {(() => {
+          const { score, label } = calcScore(result);
+          return (
+            <div className="rounded-2xl p-5 text-white flex items-center justify-between shadow-lg relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, #8b653a 0%, #b07a3a 50%, #c4954a 100%)" }}>
+              <div className="absolute right-[-24px] top-[-24px] w-28 h-28 rounded-full bg-white/[0.07]" />
+              <div>
+                <div className="text-xs opacity-70 tracking-[0.2em] mb-1">综合评分</div>
+                <div className="text-5xl font-black leading-none">{score}</div>
+              </div>
+              <div className="text-right">
+                <div className="inline-block bg-white/20 border border-white/30 rounded-full px-4 py-1 text-sm font-semibold mb-2">
+                  ✦ {label}
+                </div>
+                <div className="text-xs opacity-60 block">
+                  {evaluation.zodiacOverride || ""}
+                </div>
+                <div className="text-xs opacity-50 mt-1">笔画 · 梅花 · 干支 三维评测</div>
+              </div>
+            </div>
+          );
+        })()}
         <StrokeAnalysisCard data={result.strokeAnalysis} />
         <PlumBlossomCard data={result.plumBlossom} />
         <EnergyMatrixCard data={result.energyAnalysis} />
