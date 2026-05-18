@@ -1,52 +1,44 @@
+"use client";
+
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
-import { prisma } from "@/lib/db";
+import { useSearchParams } from "next/navigation";
+import {
+  listEvaluations,
+  listCompanyEvaluations,
+  listNamingEvaluations,
+  deleteEvaluation,
+  deleteCompanyEvaluation,
+  deleteNamingEvaluation,
+} from "@/lib/storage";
+import type {
+  StoredEvaluation,
+  StoredCompanyEvaluation,
+  StoredNamingEvaluation,
+} from "@/lib/storage";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { HistoryTabs } from "@/components/name/HistoryTabs";
 
-export const dynamic = "force-dynamic";
+function HistoryContent() {
+  const searchParams = useSearchParams();
+  const tab = searchParams.get("tab") ?? undefined;
 
-interface Props {
-  searchParams: Promise<{ tab?: string }>;
-}
+  const [evaluations, setEvaluations] = useState<StoredEvaluation[]>([]);
+  const [companyEvaluations, setCompanyEvaluations] = useState<StoredCompanyEvaluation[]>([]);
+  const [namingEvaluations, setNamingEvaluations] = useState<StoredNamingEvaluation[]>([]);
 
-export default async function HistoryPage({ searchParams }: Props) {
-  const { tab } = await searchParams;
-  const [evaluations, companyEvaluations, namingEvaluations] = await Promise.all([
-    prisma.evaluation.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        surname: true,
-        givenName: true,
-        birthDate: true,
-        isLunar: true,
-        createdAt: true,
-      },
-    }),
-    prisma.companyEvaluation.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        companyName: true,
-        founderName: true,
-        createdAt: true,
-      },
-    }),
-    prisma.namingEvaluation.findMany({
-      orderBy: { createdAt: "desc" },
-      select: {
-        id: true,
-        surname: true,
-        ownZodiac: true,
-        fatherSurname: true,
-        fatherZodiac: true,
-        motherSurname: true,
-        motherZodiac: true,
-        createdAt: true,
-      },
-    }),
-  ]);
+  const reload = () => {
+    setEvaluations(listEvaluations());
+    setCompanyEvaluations(listCompanyEvaluations());
+    setNamingEvaluations(listNamingEvaluations());
+  };
+
+  useEffect(() => { reload(); }, []);
+
+  const handleDeletePersonal = (id: string) => { deleteEvaluation(id); reload(); };
+  const handleDeleteCompany = (id: string) => { deleteCompanyEvaluation(id); reload(); };
+  const handleDeleteNaming = (id: string) => { deleteNamingEvaluation(id); reload(); };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
@@ -64,12 +56,44 @@ export default async function HistoryPage({ searchParams }: Props) {
 
       <main className="max-w-3xl mx-auto px-4 py-8">
         <HistoryTabs
-          personalEvaluations={evaluations}
-          companyEvaluations={companyEvaluations}
-          namingEvaluations={namingEvaluations}
+          personalEvaluations={evaluations.map((e) => ({
+            id: e.id,
+            surname: e.surname,
+            givenName: e.givenName,
+            birthDate: e.birthDate,
+            isLunar: e.isLunar,
+            createdAt: new Date(e.createdAt),
+          }))}
+          companyEvaluations={companyEvaluations.map((e) => ({
+            id: e.id,
+            companyName: e.companyName,
+            founderName: e.founderName,
+            createdAt: new Date(e.createdAt),
+          }))}
+          namingEvaluations={namingEvaluations.map((e) => ({
+            id: e.id,
+            surname: e.surname,
+            ownZodiac: e.ownZodiac,
+            fatherSurname: e.fatherSurname,
+            fatherZodiac: e.fatherZodiac ?? null,
+            motherSurname: e.motherSurname,
+            motherZodiac: e.motherZodiac,
+            createdAt: new Date(e.createdAt),
+          }))}
           defaultTab={tab}
+          onDeletePersonal={handleDeletePersonal}
+          onDeleteCompany={handleDeleteCompany}
+          onDeleteNaming={handleDeleteNaming}
         />
       </main>
     </div>
+  );
+}
+
+export default function HistoryPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-muted-foreground">加载中...</div>}>
+      <HistoryContent />
+    </Suspense>
   );
 }

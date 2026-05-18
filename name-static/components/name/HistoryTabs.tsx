@@ -43,9 +43,12 @@ interface Props {
   companyEvaluations: CompanyItem[];
   namingEvaluations: NamingItem[];
   defaultTab?: string;
+  onDeletePersonal?: (id: string) => void;
+  onDeleteCompany?: (id: string) => void;
+  onDeleteNaming?: (id: string) => void;
 }
 
-function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
+function CompanyHistoryList({ evaluations, onDelete }: { evaluations: CompanyItem[]; onDelete?: (id: string) => void }) {
   const router = useRouter();
   const [compareMode, setCompareMode] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
@@ -176,13 +179,13 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
                 {!compareMode && (
                   <div className="flex gap-2">
                     <Link
-                      href={`/company/result/${ev.id}`}
+                      href={`/company/result?id=${ev.id}`}
                       className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
                       onClick={(e) => e.stopPropagation()}
                     >
                       查看
                     </Link>
-                    <DeleteButton id={ev.id} deleteUrl={`/api/company-evaluate/${ev.id}`} />
+                    <DeleteButton id={ev.id} onDelete={onDelete ?? (() => {})} />
                   </div>
                 )}
               </CardContent>
@@ -194,7 +197,7 @@ function CompanyHistoryList({ evaluations }: { evaluations: CompanyItem[] }) {
   );
 }
 
-function NamingHistoryList({ evaluations }: { evaluations: NamingItem[] }) {
+function NamingHistoryList({ evaluations, onDelete }: { evaluations: NamingItem[]; onDelete?: (id: string) => void }) {
   if (evaluations.length === 0) {
     return (
       <div className="text-center py-16 text-muted-foreground">
@@ -229,12 +232,12 @@ function NamingHistoryList({ evaluations }: { evaluations: NamingItem[] }) {
             </div>
             <div className="flex gap-2">
               <Link
-                href={`/naming/result/${ev.id}`}
+                href={`/naming/result?id=${ev.id}`}
                 className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
               >
                 查看
               </Link>
-              <DeleteButton id={ev.id} deleteUrl={`/api/naming-save/${ev.id}`} />
+              <DeleteButton id={ev.id} onDelete={onDelete ?? (() => {})} />
             </div>
           </CardContent>
         </Card>
@@ -243,7 +246,7 @@ function NamingHistoryList({ evaluations }: { evaluations: NamingItem[] }) {
   );
 }
 
-export function HistoryTabs({ personalEvaluations, companyEvaluations, namingEvaluations, defaultTab }: Props) {
+export function HistoryTabs({ personalEvaluations, companyEvaluations, namingEvaluations, defaultTab, onDeletePersonal, onDeleteCompany, onDeleteNaming }: Props) {
   return (
     <Tabs defaultValue={defaultTab ?? "personal"}>
       <TabsList className="w-full">
@@ -259,15 +262,15 @@ export function HistoryTabs({ personalEvaluations, companyEvaluations, namingEva
       </TabsList>
 
       <TabsContent value="personal" className="mt-6">
-        <HistoryMultiSelect evaluations={personalEvaluations} />
+        <HistoryMultiSelect evaluations={personalEvaluations} onDelete={onDeletePersonal} />
       </TabsContent>
 
       <TabsContent value="company" className="mt-6">
-        <CompanyHistoryList evaluations={companyEvaluations} />
+        <CompanyHistoryList evaluations={companyEvaluations} onDelete={onDeleteCompany} />
       </TabsContent>
 
       <TabsContent value="naming" className="mt-6">
-        <NamingHistoryList evaluations={namingEvaluations} />
+        <NamingHistoryList evaluations={namingEvaluations} onDelete={onDeleteNaming} />
       </TabsContent>
     </Tabs>
   );

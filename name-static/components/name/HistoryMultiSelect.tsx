@@ -19,9 +19,10 @@ interface EvaluationItem {
 
 interface Props {
   evaluations: EvaluationItem[];
+  onDelete?: (id: string) => void;
 }
 
-export function HistoryMultiSelect({ evaluations }: Props) {
+export function HistoryMultiSelect({ evaluations, onDelete }: Props) {
   const router = useRouter();
   const [compareMode, setCompareMode] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
@@ -174,7 +175,7 @@ export function HistoryMultiSelect({ evaluations }: Props) {
                 {!compareMode && (
                   <div className="flex gap-2">
                     <Link
-                      href={`/result/${ev.id}`}
+                      href={`/result?id=${ev.id}`}
                       className={cn(buttonVariants({ size: "sm", variant: "outline" }))}
                       onClick={(e) => e.stopPropagation()}
                     >
@@ -187,7 +188,7 @@ export function HistoryMultiSelect({ evaluations }: Props) {
                     >
                       编辑重算
                     </Link>
-                    <DeleteButton id={ev.id} />
+                    <DeleteButton id={ev.id} onDelete={onDelete ?? (() => {})} />
                   </div>
                 )}
               </CardContent>
