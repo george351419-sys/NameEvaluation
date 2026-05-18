@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山水淡雅 · 完整设计方案</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #f0e8d8; font-family: -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif; }
+
+  /* ── Layout ── */
+  .page { display: flex; flex-direction: column; gap: 0; }
+  .section { padding: 32px 20px; }
+  .section-title { font-size: 11px; font-weight: 700; color: #9b7d5a; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: rgba(139,101,58,0.2); }
+
+  /* ── Color Swatches ── */
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .swatch { border-radius: 10px; padding: 12px 16px; min-width: 100px; }
+  .swatch-label { font-size: 9px; opacity: 0.7; margin-bottom: 4px; letter-spacing: 1px; }
+  .swatch-value { font-size: 11px; font-weight: 600; }
+
+  /* ── Fortune Badges ── */
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge { border-radius: 20px; padding: 4px 14px; font-size: 11px; font-weight: 600; letter-spacing: 1px; }
+
+  /* ── Home Page Mockup ── */
+  .app { background: linear-gradient(160deg, #fdfaf5 0%, #f7f0e6 50%, #efe8d8 100%); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(139,101,58,0.2); }
+
+  .app-nav { background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(196,149,74,0.15); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .app-logo { display: flex; align-items: center; gap: 8px; }
+  .app-logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #8b653a, #c4954a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; box-shadow: 0 2px 8px rgba(139,101,58,0.3); }
+  .app-logo-text { font-size: 17px; font-weight: 800; color: #3d2b10; letter-spacing: 2px; }
+  .app-nav-tabs { display: flex; background: #f3e9d8; border-radius: 10px; overflow: hidden; border: 1px solid rgba(196,149,74,0.2); }
+  .app-nav-tab { padding: 6px 14px; font-size: 12px; color: #9b7d5a; cursor: pointer; }
+  .app-nav-tab.active { background: linear-gradient(135deg, #8b653a, #c4954a); color: white; font-weight: 600; }
+
+  .app-hero { padding: 36px 20px 20px; text-align: center; position: relative; }
+  .app-hero::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 200px; height: 200px; background: radial-gradient(ellipse, rgba(196,149,74,0.1) 0%, transparent 70%); pointer-events: none; }
+  .app-hero-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(196,149,74,0.12); border: 1px solid rgba(196,149,74,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; color: #8b653a; margin-bottom: 16px; letter-spacing: 1px; }
+  .app-hero-title { font-size: 32px; font-weight: 900; color: #3d2b10; letter-spacing: 4px; line-height: 1.2; margin-bottom: 6px; }
+  .app-hero-sub { font-size: 12px; color: #9b7d5a; letter-spacing: 2px; margin-bottom: 4px; }
+  .app-hero-divider { display: flex; align-items: center; gap: 12px; margin: 14px auto; width: fit-content; }
+  .app-hero-divider-line { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, rgba(196,149,74,0.5)); }
+  .app-hero-divider-icon { color: #c4954a; font-size: 14px; }
+
+  /* Form Card */
+  .form-card { background: white; border-radius: 16px; padding: 20px; margin: 0 16px 16px; box-shadow: 0 6px 30px rgba(139,101,58,0.12); border: 1px solid rgba(196,149,74,0.2); }
+  .form-card-title { font-size: 13px; font-weight: 700; color: #3d2b10; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .form-card-title::before { content: ''; width: 3px; height: 16px; background: linear-gradient(180deg, #c4954a, #8b653a); border-radius: 2px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+  .form-field label { display: block; font-size: 10px; color: #9b7d5a; letter-spacing: 1px; margin-bottom: 5px; }
+  .form-input { width: 100%; border: 1.5px solid rgba(196,149,74,0.25); border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #3d2b10; background: #fdfaf5; outline: none; transition: border-color 0.2s; }
+  .form-input:focus { border-color: #c4954a; background: white; }
+
+  .btn-primary { width: 100%; background: linear-gradient(135deg, #8b653a, #c4954a); border: none; border-radius: 10px; padding: 13px; color: white; font-size: 14px; font-weight: 700; letter-spacing: 2px; cursor: pointer; box-shadow: 0 4px 16px rgba(139,101,58,0.35); }
+
+  /* ── Result Page Mockup ── */
+  .result-score { background: linear-gradient(135deg, #8b653a, #c4954a); border-radius: 14px; padding: 18px 20px; margin: 0 16px 12px; color: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 6px 20px rgba(139,101,58,0.35); position: relative; overflow: hidden; }
+  .result-score::after { content: ''; position: absolute; right: -20px; top: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.08); border-radius: 50%; }
+  .score-number { font-size: 48px; font-weight: 900; line-height: 1; }
+  .score-label { font-size: 10px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 4px; }
+  .score-badge { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600; display: inline-block; margin-bottom: 8px; }
+  .score-detail { font-size: 10px; opacity: 0.65; }
+
+  .result-card { background: white; border-radius: 14px; padding: 16px 18px; margin: 0 16px 10px; box-shadow: 0 3px 16px rgba(139,101,58,0.09); border: 1px solid rgba(196,149,74,0.18); }
+  .result-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid rgba(196,149,74,0.12); }
+  .result-card-header::before { content: ''; width: 3px; height: 16px; background: linear-gradient(180deg, #c4954a, #8b653a); border-radius: 2px; flex-shrink: 0; }
+  .result-card-title { font-size: 13px; font-weight: 700; color: #3d2b10; letter-spacing: 1px; }
+  .result-card-sub { margin-left: auto; font-size: 10px; color: #9b7d5a; background: #fdfaf5; padding: 2px 10px; border-radius: 10px; border: 1px solid rgba(196,149,74,0.2); }
+
+  .stroke-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+  .stroke-item { text-align: center; background: #fdfaf5; border-radius: 10px; padding: 10px 6px; border: 1px solid rgba(196,149,74,0.15); }
+  .stroke-name { font-size: 10px; color: #9b7d5a; margin-bottom: 4px; }
+  .stroke-num { font-size: 20px; font-weight: 800; color: #3d2b10; margin-bottom: 4px; }
+  .fortune-da-ji { background: linear-gradient(135deg, #fef3e2, #fde8c0); color: #9a6820; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+  .fortune-ji { background: #edf7f0; color: #2d7a4f; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+  .fortune-ban { background: #f5f5f0; color: #7a7a6a; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+  .fortune-xiong { background: #fef0f0; color: #a04040; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══ COLOR SYSTEM ══ -->
+  <div class="section" style="background:#fdfaf5;">
+    <div class="section-title">配色系统</div>
+    <div class="swatches">
+      <div class="swatch" style="background:#3d2b10;color:white;">
+        <div class="swatch-label">PRIMARY TEXT</div>
+        <div class="swatch-value">#3d2b10</div>
+      </div>
+      <div class="swatch" style="background:#8b653a;color:white;">
+        <div class="swatch-label">BRAND DARK</div>
+        <div class="swatch-value">#8b653a</div>
+      </div>
+      <div class="swatch" style="background:#c4954a;color:white;">
+        <div class="swatch-label">BRAND GOLD</div>
+        <div class="swatch-value">#c4954a</div>
+      </div>
+      <div class="swatch" style="background:#9b7d5a;color:white;">
+        <div class="swatch-label">MUTED</div>
+        <div class="swatch-value">#9b7d5a</div>
+      </div>
+      <div class="swatch" style="background:#fdfaf5;border:1px solid rgba(139,101,58,0.2);color:#3d2b10;">
+        <div class="swatch-label">BG CREAM</div>
+        <div class="swatch-value">#fdfaf5</div>
+      </div>
+      <div class="swatch" style="background:white;border:1px solid rgba(139,101,58,0.15);color:#3d2b10;">
+        <div class="swatch-label">CARD WHITE</div>
+        <div class="swatch-value">#ffffff</div>
+      </div>
+      <div class="swatch" style="background:#fef3e2;border:1px solid rgba(196,149,74,0.25);color:#9a6820;">
+        <div class="swatch-label">ACCENT LIGHT</div>
+        <div class="swatch-value">#fef3e2</div>
+      </div>
+    </div>
+    <div class="section-title" style="margin-top:16px;">吉凶徽标</div>
+    <div class="badges">
+      <span class="badge" style="background:linear-gradient(135deg,#fef3e2,#fde8c0);color:#9a6820;border:1px solid rgba(196,149,74,0.3);">大吉</span>
+      <span class="badge" style="background:#edf7f0;color:#2d7a4f;border:1px solid rgba(45,122,79,0.2);">吉</span>
+      <span class="badge" style="background:#e8f4fd;color:#2a6496;border:1px solid rgba(42,100,150,0.2);">小吉</span>
+      <span class="badge" style="background:#f5f5f0;color:#7a7a6a;border:1px solid rgba(122,122,106,0.2);">半吉</span>
+      <span class="badge" style="background:#fff8e6;color:#c47c00;border:1px solid rgba(196,124,0,0.2);">半凶</span>
+      <span class="badge" style="background:#fef0f0;color:#a04040;border:1px solid rgba(160,64,64,0.2);">凶</span>
+      <span class="badge" style="background:#f5e6e6;color:#7a1a1a;border:1px solid rgba(122,26,26,0.2);">大凶</span>
+    </div>
+  </div>
+
+  <!-- ══ HOME PAGE ══ -->
+  <div class="section" style="background:#ede4d4;">
+    <div class="section-title">首页</div>
+    <div class="app">
+      <!-- Nav -->
+      <div class="app-nav">
+        <div class="app-logo">
+          <div class="app-logo-icon">☯</div>
+          <span class="app-logo-text">名字评测</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="app-nav-tabs">
+            <div class="app-nav-tab active">人名评测</div>
+            <div class="app-nav-tab">公司评测</div>
+            <div class="app-nav-tab">命名建议</div>
+          </div>
+          <div style="font-size:12px;color:#9b7d5a;padding:6px 10px;border-radius:8px;border:1px solid rgba(196,149,74,0.2);">历史记录</div>
+        </div>
+      </div>
+      <!-- Hero -->
+      <div class="app-hero">
+        <div class="app-hero-tag">✦ 传统命理 · 现代解读</div>
+        <div class="app-hero-title">姓名命理评测</div>
+        <div class="app-hero-sub">笔画数命理 · 梅花易数 · 干支能量</div>
+        <div class="app-hero-divider">
+          <div class="app-hero-divider-line"></div>
+          <div class="app-hero-divider-icon">◆</div>
+          <div class="app-hero-divider-line" style="transform:scaleX(-1)"></div>
+        </div>
+      </div>
+      <!-- Form -->
+      <div class="form-card">
+        <div class="form-card-title">基本信息</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label>姓</label>
+            <input class="form-input" value="张" readonly>
+          </div>
+          <div class="form-field">
+            <label>名</label>
+            <input class="form-input" value="伟" readonly>
+          </div>
+        </div>
+        <div class="form-field" style="margin-bottom:14px;">
+          <label>出生日期</label>
+          <input class="form-input" value="1990-03-15" readonly>
+        </div>
+        <button class="btn-primary">开 始 评 测</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ RESULT PAGE ══ -->
+  <div class="section" style="background:#ede4d4;">
+    <div class="section-title">结果页</div>
+    <div class="app">
+      <!-- Nav -->
+      <div class="app-nav" style="padding:10px 16px;">
+        <div style="font-size:13px;font-weight:700;color:#3d2b10;">张伟 命理报告</div>
+        <div style="display:flex;gap:6px;">
+          <div style="font-size:11px;color:#8b653a;border:1px solid rgba(139,101,58,0.3);padding:4px 12px;border-radius:8px;">← 返回</div>
+          <div style="font-size:11px;color:white;background:linear-gradient(135deg,#8b653a,#c4954a);padding:4px 12px;border-radius:8px;">分享</div>
+          <div style="font-size:11px;color:#8b653a;border:1px solid rgba(139,101,58,0.3);padding:4px 12px;border-radius:8px;">对比</div>
+        </div>
+      </div>
+
+      <!-- Score Banner -->
+      <div style="padding:12px 16px 0;">
+        <div class="result-score">
+          <div>
+            <div class="score-label">综合评分</div>
+            <div class="score-number">82</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="score-badge">✦ 整体吉祥</div>
+            <div class="score-detail">属马 · 五行缺火</div>
+            <div class="score-detail" style="margin-top:3px;">笔画·梅花·干支 三维评测</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 1: 笔画 -->
+      <div style="padding:10px 16px 0;">
+        <div class="result-card">
+          <div class="result-card-header">
+            <span class="result-card-title">一、笔画格局</span>
+            <span class="result-card-sub">五格剖象</span>
+          </div>
+          <div class="stroke-grid">
+            <div class="stroke-item">
+              <div class="stroke-name">天格</div>
+              <div class="stroke-num">15</div>
+              <div class="fortune-da-ji">大吉</div>
+            </div>
+            <div class="stroke-item">
+              <div class="stroke-name">人格</div>
+              <div class="stroke-num">23</div>
+              <div class="fortune-da-ji">大吉</div>
+            </div>
+            <div class="stroke-item">
+              <div class="stroke-name">地格</div>
+              <div class="stroke-num">18</div>
+              <div class="fortune-ji">吉</div>
+            </div>
+            <div class="stroke-item">
+              <div class="stroke-name">外格</div>
+              <div class="stroke-num">10</div>
+              <div class="fortune-ban">半吉</div>
+            </div>
+            <div class="stroke-item">
+              <div class="stroke-name">总格</div>
+              <div class="stroke-num">31</div>
+              <div class="fortune-da-ji">大吉</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: 梅花 -->
+      <div style="padding:10px 16px 0;">
+        <div class="result-card">
+          <div class="result-card-header">
+            <span class="result-card-title">二、梅花易数</span>
+            <span class="result-card-sub">属马 · 动爻3</span>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="background:linear-gradient(135deg,#fef3e2,#fdf5e8);border-radius:10px;padding:12px;border:1px solid rgba(196,149,74,0.2);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12px;font-weight:700;color:#3d2b10;">早年（本卦）</span>
+                <span class="fortune-da-ji">大吉</span>
+              </div>
+              <div style="font-size:12px;color:#8b653a;font-weight:600;margin-bottom:3px;">乾为天 ☰☰</div>
+              <div style="font-size:11px;color:#5c3d1e;line-height:1.5;">天行健，君子以自强不息。早年积极进取，贵人相助，事业顺遂。</div>
+            </div>
+            <div style="background:#fdfaf5;border-radius:10px;padding:12px;border:1px solid rgba(196,149,74,0.15);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+                <span style="font-size:12px;font-weight:700;color:#3d2b10;">中年（互卦）</span>
+                <span class="fortune-ji">吉</span>
+              </div>
+              <div style="font-size:12px;color:#8b653a;font-weight:600;margin-bottom:3px;">坤为地 ☷☷</div>
+              <div style="font-size:11px;color:#5c3d1e;line-height:1.5;">地势坤，君子以厚德载物。中年稳健，适宜积累沉淀。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: 解析 -->
+      <div style="padding:10px 16px 16px;">
+        <div class="result-card">
+          <div class="result-card-header">
+            <span class="result-card-title">四、命理综合解析</span>
+          </div>
+          <div style="font-size:12px;color:#5c3d1e;line-height:1.8;">
+            整体来看，此名笔画格局优良，天格、人格、总格均为大吉格，梅花易数早年运势吉祥，综合评定为<strong style="color:#8b653a;">上佳之名</strong>，可放心使用。
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

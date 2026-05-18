@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>山水淡雅 · 完整设计方案 v2</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #e8ddd0; font-family: -apple-system, 'PingFang SC', 'Hiragino Sans GB', sans-serif; padding: 40px 20px; }
+
+  .section-label { font-size: 10px; font-weight: 700; color: #9b7d5a; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: rgba(139,101,58,0.25); }
+
+  /* ── Browser chrome ── */
+  .browser { background: #d4c8b8; border-radius: 14px; overflow: hidden; box-shadow: 0 12px 50px rgba(80,50,20,0.25); margin-bottom: 48px; }
+  .browser-bar { background: #c8bba8; padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .browser-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .browser-url { flex: 1; background: rgba(255,255,255,0.5); border-radius: 6px; padding: 4px 10px; font-size: 10px; color: #7a6a58; margin: 0 8px; }
+  .browser-body { background: linear-gradient(160deg, #fdfaf5 0%, #f7f0e6 60%, #efe8d8 100%); overflow: hidden; }
+
+  /* ── App chrome ── */
+  .app-nav { background: rgba(255,255,255,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(196,149,74,0.15); padding: 12px 0; }
+  .app-nav-inner { max-width: 720px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { display: flex; align-items: center; gap: 8px; }
+  .logo-icon { width: 32px; height: 32px; background: linear-gradient(135deg, #8b653a, #c4954a); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px; box-shadow: 0 2px 8px rgba(139,101,58,0.3); }
+  .logo-text { font-size: 17px; font-weight: 800; color: #3d2b10; letter-spacing: 2px; }
+  .nav-tabs { display: flex; background: #f3e9d8; border-radius: 10px; overflow: hidden; border: 1px solid rgba(196,149,74,0.2); }
+  .nav-tab { padding: 6px 14px; font-size: 12px; color: #9b7d5a; }
+  .nav-tab.active { background: linear-gradient(135deg, #8b653a, #c4954a); color: white; font-weight: 600; }
+  .nav-link { font-size: 12px; color: #9b7d5a; padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(196,149,74,0.2); }
+
+  /* ── Content wrapper ── */
+  .content { max-width: 720px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ── Hero ── */
+  .hero { text-align: center; margin-bottom: 28px; }
+  .hero-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(196,149,74,0.1); border: 1px solid rgba(196,149,74,0.3); border-radius: 20px; padding: 4px 14px; font-size: 11px; color: #8b653a; margin-bottom: 14px; letter-spacing: 1px; }
+  .hero-title { font-size: 30px; font-weight: 900; color: #3d2b10; letter-spacing: 4px; margin-bottom: 6px; }
+  .hero-sub { font-size: 12px; color: #9b7d5a; letter-spacing: 2px; }
+  .hero-divider { display: flex; align-items: center; gap: 12px; justify-content: center; margin: 14px 0 0; }
+  .divider-line { width: 36px; height: 1px; background: linear-gradient(90deg, transparent, rgba(196,149,74,0.5)); }
+  .divider-icon { color: #c4954a; font-size: 12px; }
+
+  /* ── Form card ── */
+  .card { background: white; border-radius: 14px; padding: 20px 22px; margin-bottom: 12px; box-shadow: 0 4px 20px rgba(139,101,58,0.1); border: 1px solid rgba(196,149,74,0.18); }
+  .card-title { font-size: 13px; font-weight: 700; color: #3d2b10; letter-spacing: 1px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .card-title::before { content: ''; width: 3px; height: 16px; background: linear-gradient(180deg, #c4954a, #8b653a); border-radius: 2px; flex-shrink: 0; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .field label { display: block; font-size: 10px; color: #9b7d5a; letter-spacing: 1px; margin-bottom: 5px; }
+  .input { width: 100%; border: 1.5px solid rgba(196,149,74,0.25); border-radius: 8px; padding: 9px 12px; font-size: 13px; color: #3d2b10; background: #fdfaf5; }
+  .btn { width: 100%; background: linear-gradient(135deg, #8b653a, #c4954a); border: none; border-radius: 10px; padding: 13px; color: white; font-size: 14px; font-weight: 700; letter-spacing: 2px; box-shadow: 0 4px 14px rgba(139,101,58,0.3); }
+
+  /* ── Score banner ── */
+  .score-banner { background: linear-gradient(135deg, #8b653a 0%, #b07a3a 50%, #c4954a 100%); border-radius: 14px; padding: 18px 22px; margin-bottom: 12px; color: white; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 6px 20px rgba(139,101,58,0.3); position: relative; overflow: hidden; }
+  .score-banner::after { content: ''; position: absolute; right: -30px; top: -30px; width: 120px; height: 120px; background: rgba(255,255,255,0.07); border-radius: 50%; }
+  .score-num { font-size: 52px; font-weight: 900; line-height: 1; }
+  .score-lbl { font-size: 10px; opacity: 0.7; letter-spacing: 2px; margin-bottom: 4px; }
+  .score-pill { background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 600; display: inline-block; margin-bottom: 6px; }
+  .score-note { font-size: 10px; opacity: 0.6; }
+
+  /* ── Result card ── */
+  .rcard { background: white; border-radius: 14px; padding: 18px 22px; margin-bottom: 12px; box-shadow: 0 3px 14px rgba(139,101,58,0.08); border: 1px solid rgba(196,149,74,0.16); }
+  .rcard-hd { display: flex; align-items: center; gap: 8px; padding-bottom: 12px; margin-bottom: 14px; border-bottom: 1px solid rgba(196,149,74,0.12); }
+  .rcard-hd::before { content: ''; width: 3px; height: 16px; background: linear-gradient(180deg, #c4954a, #8b653a); border-radius: 2px; flex-shrink: 0; }
+  .rcard-title { font-size: 13px; font-weight: 700; color: #3d2b10; letter-spacing: 1px; }
+  .rcard-sub { margin-left: auto; font-size: 10px; color: #9b7d5a; background: #fdfaf5; padding: 2px 10px; border-radius: 10px; border: 1px solid rgba(196,149,74,0.18); }
+
+  /* Stroke grid */
+  .sg { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+  .si { text-align: center; background: #fdfaf5; border-radius: 10px; padding: 12px 6px; border: 1px solid rgba(196,149,74,0.14); }
+  .si-name { font-size: 10px; color: #9b7d5a; margin-bottom: 5px; }
+  .si-num { font-size: 22px; font-weight: 800; color: #3d2b10; margin-bottom: 5px; }
+  .b-daji { background: linear-gradient(135deg,#fef3e2,#fde8c0); color: #9a6820; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; border: 1px solid rgba(196,149,74,0.25); }
+  .b-ji { background: #edf7f0; color: #2d7a4f; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; border: 1px solid rgba(45,122,79,0.2); }
+  .b-ban { background: #f5f5f0; color: #7a7a6a; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; border: 1px solid rgba(122,122,106,0.18); }
+
+  /* Plum stages */
+  .plum-stage { border-radius: 10px; padding: 13px 15px; margin-bottom: 8px; }
+  .plum-stage:last-child { margin-bottom: 0; }
+  .ps-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .ps-title { font-size: 12px; font-weight: 700; color: #3d2b10; }
+  .ps-gua { font-size: 12px; color: #8b653a; font-weight: 600; margin-bottom: 4px; }
+  .ps-text { font-size: 11px; color: #5c3d1e; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- ══ COLOR TOKENS ══ -->
+<div style="margin-bottom:40px;">
+  <div class="section-label">配色 & 吉凶标签</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;">
+    <div style="background:#3d2b10;color:white;border-radius:8px;padding:10px 14px;font-size:10px;"><div style="opacity:.6;margin-bottom:3px;">TEXT</div>#3d2b10</div>
+    <div style="background:#8b653a;color:white;border-radius:8px;padding:10px 14px;font-size:10px;"><div style="opacity:.6;margin-bottom:3px;">BRAND</div>#8b653a</div>
+    <div style="background:#c4954a;color:white;border-radius:8px;padding:10px 14px;font-size:10px;"><div style="opacity:.6;margin-bottom:3px;">GOLD</div>#c4954a</div>
+    <div style="background:#9b7d5a;color:white;border-radius:8px;padding:10px 14px;font-size:10px;"><div style="opacity:.6;margin-bottom:3px;">MUTED</div>#9b7d5a</div>
+    <div style="background:#fdfaf5;color:#3d2b10;border:1px solid rgba(139,101,58,0.2);border-radius:8px;padding:10px 14px;font-size:10px;"><div style="opacity:.6;margin-bottom:3px;">BG</div>#fdfaf5</div>
+    <div style="background:white;color:#3d2b10;border:1px solid rgba(139,101,58,0.15);border-radius:8px;padding:10px 14px;font-size:10px;"><div style="opacity:.6;margin-bottom:3px;">CARD</div>#ffffff</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <span style="background:linear-gradient(135deg,#fef3e2,#fde8c0);color:#9a6820;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(196,149,74,0.3);">大吉</span>
+    <span style="background:#edf7f0;color:#2d7a4f;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(45,122,79,0.2);">吉</span>
+    <span style="background:#e8f4fd;color:#2a6496;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(42,100,150,0.2);">小吉</span>
+    <span style="background:#f5f5f0;color:#7a7a6a;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(122,122,106,0.2);">半吉</span>
+    <span style="background:#fff8e6;color:#c47c00;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(196,124,0,0.2);">半凶</span>
+    <span style="background:#fef0f0;color:#a04040;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(160,64,64,0.2);">凶</span>
+    <span style="background:#f5e6e6;color:#7a1a1a;font-size:11px;font-weight:600;padding:4px 14px;border-radius:20px;border:1px solid rgba(122,26,26,0.2);">大凶</span>
+  </div>
+</div>
+
+<!-- ══ HOME PAGE ══ -->
+<div class="section-label">首页</div>
+<div class="browser" style="margin-bottom:48px;">
+  <div class="browser-bar">
+    <div class="browser-dot" style="background:#ff5f57;"></div>
+    <div class="browser-dot" style="background:#ffbd2e;"></div>
+    <div class="browser-dot" style="background:#28c840;"></div>
+    <div class="browser-url">localhost:3000</div>
+  </div>
+  <div class="browser-body">
+    <div class="app-nav">
+      <div class="app-nav-inner">
+        <div class="logo">
+          <div class="logo-icon">☯</div>
+          <span class="logo-text">名字评测</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="nav-tabs">
+            <div class="nav-tab active">人名评测</div>
+            <div class="nav-tab">公司评测</div>
+            <div class="nav-tab">命名建议</div>
+          </div>
+          <div class="nav-link">历史记录</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <div class="hero">
+        <div class="hero-tag">✦ 传统命理 · 现代解读</div>
+        <div class="hero-title">姓名命理评测</div>
+        <div class="hero-sub">笔画数命理 · 梅花易数 · 干支能量</div>
+        <div class="hero-divider">
+          <div class="divider-line"></div>
+          <div class="divider-icon">◆</div>
+          <div class="divider-line" style="transform:scaleX(-1)"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">基本信息</div>
+        <div class="form-grid">
+          <div class="field"><label>姓</label><input class="input" value="张" readonly></div>
+          <div class="field"><label>名</label><input class="input" value="伟" readonly></div>
+        </div>
+        <div class="field" style="margin-bottom:14px;"><label>出生日期</label><input class="input" value="1990-03-15" readonly></div>
+        <button class="btn">开 始 评 测</button>
+      </div>
+      <div class="card" style="opacity:.55;">
+        <div class="card-title">父母及孩子信息（选填）</div>
+        <div style="height:40px;background:#fdfaf5;border-radius:8px;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULT PAGE ══ -->
+<div class="section-label">结果页</div>
+<div class="browser">
+  <div class="browser-bar">
+    <div class="browser-dot" style="background:#ff5f57;"></div>
+    <div class="browser-dot" style="background:#ffbd2e;"></div>
+    <div class="browser-dot" style="background:#28c840;"></div>
+    <div class="browser-url">localhost:3000/result?id=xxx</div>
+  </div>
+  <div class="browser-body">
+    <div class="app-nav">
+      <div class="app-nav-inner">
+        <div>
+          <div style="font-size:15px;font-weight:800;color:#3d2b10;letter-spacing:1px;">张伟 命理评测报告</div>
+          <div style="font-size:11px;color:#9b7d5a;margin-top:2px;">出生：1990-03-15（阳历）</div>
+        </div>
+        <div style="display:flex;gap:7px;">
+          <div style="font-size:11px;color:white;background:linear-gradient(135deg,#8b653a,#c4954a);padding:5px 12px;border-radius:8px;">← 返回记录</div>
+          <div style="font-size:11px;color:#8b653a;border:1px solid rgba(139,101,58,0.3);padding:5px 12px;border-radius:8px;">分享</div>
+          <div style="font-size:11px;color:#8b653a;border:1px solid rgba(139,101,58,0.3);padding:5px 12px;border-radius:8px;">对比</div>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <!-- Score banner -->
+      <div class="score-banner">
+        <div>
+          <div class="score-lbl">综合评分</div>
+          <div class="score-num">82</div>
+        </div>
+        <div style="text-align:right;">
+          <div class="score-pill">✦ 整体吉祥</div>
+          <div class="score-note">属马 · 五行缺火</div>
+          <div class="score-note" style="margin-top:3px;">笔画 · 梅花 · 干支 三维评测</div>
+        </div>
+      </div>
+
+      <!-- 笔画 -->
+      <div class="rcard">
+        <div class="rcard-hd">
+          <span class="rcard-title">一、笔画格局</span>
+          <span class="rcard-sub">五格剖象</span>
+        </div>
+        <div class="sg">
+          <div class="si"><div class="si-name">天格</div><div class="si-num">15</div><div class="b-daji">大吉</div></div>
+          <div class="si"><div class="si-name">人格</div><div class="si-num">23</div><div class="b-daji">大吉</div></div>
+          <div class="si"><div class="si-name">地格</div><div class="si-num">18</div><div class="b-ji">吉</div></div>
+          <div class="si"><div class="si-name">外格</div><div class="si-num">10</div><div class="b-ban">半吉</div></div>
+          <div class="si"><div class="si-name">总格</div><div class="si-num">31</div><div class="b-daji">大吉</div></div>
+        </div>
+      </div>
+
+      <!-- 梅花 -->
+      <div class="rcard">
+        <div class="rcard-hd">
+          <span class="rcard-title">二、梅花易数</span>
+          <span class="rcard-sub">属马 · 动爻3</span>
+        </div>
+        <div class="plum-stage" style="background:linear-gradient(135deg,#fef3e2,#fdf5e8);border:1px solid rgba(196,149,74,0.2);">
+          <div class="ps-top"><span class="ps-title">早年（本卦）</span><span class="b-daji">大吉</span></div>
+          <div class="ps-gua">乾为天 ☰☰</div>
+          <div class="ps-text">天行健，君子以自强不息。早年积极进取，贵人相助，事业顺遂。</div>
+        </div>
+        <div class="plum-stage" style="background:#fdfaf5;border:1px solid rgba(196,149,74,0.14);">
+          <div class="ps-top"><span class="ps-title">中年（互卦）</span><span class="b-ji">吉</span></div>
+          <div class="ps-gua">坤为地 ☷☷</div>
+          <div class="ps-text">地势坤，君子以厚德载物。中年稳健，适宜积累沉淀。</div>
+        </div>
+        <div class="plum-stage" style="background:#fdfaf5;border:1px solid rgba(196,149,74,0.14);">
+          <div class="ps-top"><span class="ps-title">晚年（变卦）</span><span class="b-ban">半吉</span></div>
+          <div class="ps-gua">水雷屯 ☵☳</div>
+          <div class="ps-text">屯者，难也。晚年需坚守本心，持续积累，厚积薄发。</div>
+        </div>
+      </div>
+
+      <!-- 综合解析 -->
+      <div class="rcard">
+        <div class="rcard-hd">
+          <span class="rcard-title">四、命理综合解析</span>
+        </div>
+        <div style="font-size:13px;color:#5c3d1e;line-height:1.9;">
+          整体来看，此名笔画格局优良，天格、人格、总格均为<strong style="color:#8b653a;">大吉格</strong>，梅花易数早年运势吉祥，综合评定为<strong style="color:#8b653a;">上佳之名</strong>，可放心使用。
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

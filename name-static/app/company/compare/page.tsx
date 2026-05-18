@@ -44,12 +44,12 @@ function CompanyCompareContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdfaf5] to-[#efe8d8]">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">☯</span>
-            <h1 className="text-xl font-bold text-amber-900">公司名对比</h1>
+            <h1 className="text-xl font-bold text-[#3d2b10]">公司名对比</h1>
           </div>
           <Link href="/history?tab=company" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
             ← 返回历史

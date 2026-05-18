@@ -41,14 +41,14 @@ function HistoryContent() {
   const handleDeleteNaming = (id: string) => { deleteNamingEvaluation(id); reload(); };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#fdfaf5] to-[#efe8d8]">
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl">☯</span>
-            <h1 className="text-xl font-bold text-amber-900">历史评测记录</h1>
+            <h1 className="text-xl font-bold text-[#3d2b10]">历史评测记录</h1>
           </div>
-          <Link href="/" className={cn(buttonVariants({ variant: "default", size: "sm" }), "bg-amber-700 hover:bg-amber-800 text-white")}>
+          <Link href="/" className={cn(buttonVariants({ variant: "default", size: "sm" }), "text-white")} style={{ background: "linear-gradient(135deg, #8b653a, #c4954a)" }}>
             新评测
           </Link>
         </div>

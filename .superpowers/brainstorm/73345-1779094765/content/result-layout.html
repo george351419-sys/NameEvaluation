@@ -1,0 +1,150 @@
+<h2>结果页布局选择</h2>
+<p class="subtitle">山水淡雅风格下，结果展示的两种排版方向</p>
+
+<div class="split">
+
+  <!-- Option A: 经典单列 -->
+  <div class="mockup" data-choice="a" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="mockup-header">A · 经典单列 — 沉浸阅读</div>
+    <div class="mockup-body" style="background:linear-gradient(160deg,#fdfaf5,#f7f0e6);padding:12px;font-family:sans-serif;min-height:400px;">
+      <!-- Header -->
+      <div style="background:white;border-radius:10px;padding:10px 12px;margin-bottom:10px;box-shadow:0 2px 12px rgba(139,101,58,0.1);border:1px solid rgba(196,149,74,0.15);display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#3d2b10;letter-spacing:1px;">张伟 命理评测报告</div>
+          <div style="font-size:9px;color:#9b7d5a;margin-top:1px;">生于 1990-03-15（阳历）· 属马</div>
+        </div>
+        <div style="display:flex;gap:5px;">
+          <div style="background:#f3e9d8;border-radius:6px;padding:4px 8px;font-size:9px;color:#8b653a;border:1px solid rgba(139,101,58,0.2);">← 返回</div>
+          <div style="background:linear-gradient(135deg,#8b653a,#c4954a);border-radius:6px;padding:4px 8px;font-size:9px;color:white;">分享</div>
+        </div>
+      </div>
+      <!-- Score Banner -->
+      <div style="background:linear-gradient(135deg,#8b653a,#c4954a);border-radius:10px;padding:12px;margin-bottom:8px;color:white;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:9px;opacity:0.8;letter-spacing:2px;">综合评分</div>
+          <div style="font-size:28px;font-weight:800;line-height:1;">82</div>
+          <div style="font-size:8px;opacity:0.7;margin-top:2px;">笔画·梅花·干支 三维评测</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="background:rgba(255,255,255,0.2);border-radius:20px;padding:4px 12px;font-size:10px;font-weight:600;">整体吉</div>
+          <div style="font-size:9px;opacity:0.7;margin-top:4px;">属马 · 五行缺火</div>
+        </div>
+      </div>
+      <!-- Card 1 -->
+      <div style="background:white;border-radius:10px;padding:10px 12px;margin-bottom:8px;box-shadow:0 2px 8px rgba(139,101,58,0.08);border:1px solid rgba(196,149,74,0.15);">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;">
+          <div style="width:3px;height:14px;background:linear-gradient(180deg,#c4954a,#8b653a);border-radius:2px;"></div>
+          <div style="font-size:11px;font-weight:700;color:#3d2b10;letter-spacing:1px;">一、笔画格局</div>
+          <div style="margin-left:auto;background:#fef3e2;border-radius:10px;padding:2px 8px;font-size:9px;color:#c4954a;border:1px solid rgba(196,149,74,0.25);">天格·地格·人格·外格·总格</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:5px;">
+          <div style="text-align:center;background:#fdfaf5;border-radius:6px;padding:6px 4px;border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:8px;color:#9b7d5a;margin-bottom:2px;">天格</div>
+            <div style="font-size:14px;font-weight:700;color:#3d2b10;">15</div>
+            <div style="font-size:8px;color:#c4954a;background:#fef3e2;border-radius:8px;padding:1px 4px;margin-top:2px;">大吉</div>
+          </div>
+          <div style="text-align:center;background:#fdfaf5;border-radius:6px;padding:6px 4px;border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:8px;color:#9b7d5a;margin-bottom:2px;">人格</div>
+            <div style="font-size:14px;font-weight:700;color:#3d2b10;">23</div>
+            <div style="font-size:8px;color:#c4954a;background:#fef3e2;border-radius:8px;padding:1px 4px;margin-top:2px;">大吉</div>
+          </div>
+          <div style="text-align:center;background:#fdfaf5;border-radius:6px;padding:6px 4px;border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:8px;color:#9b7d5a;margin-bottom:2px;">地格</div>
+            <div style="font-size:14px;font-weight:700;color:#3d2b10;">18</div>
+            <div style="font-size:8px;color:#2d7a4f;background:#edf7f0;border-radius:8px;padding:1px 4px;margin-top:2px;">吉</div>
+          </div>
+          <div style="text-align:center;background:#fdfaf5;border-radius:6px;padding:6px 4px;border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:8px;color:#9b7d5a;margin-bottom:2px;">外格</div>
+            <div style="font-size:14px;font-weight:700;color:#3d2b10;">10</div>
+            <div style="font-size:8px;color:#9b7d5a;background:#f5f5f0;border-radius:8px;padding:1px 4px;margin-top:2px;">半吉</div>
+          </div>
+          <div style="text-align:center;background:#fdfaf5;border-radius:6px;padding:6px 4px;border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:8px;color:#9b7d5a;margin-bottom:2px;">总格</div>
+            <div style="font-size:14px;font-weight:700;color:#3d2b10;">31</div>
+            <div style="font-size:8px;color:#c4954a;background:#fef3e2;border-radius:8px;padding:1px 4px;margin-top:2px;">大吉</div>
+          </div>
+        </div>
+      </div>
+      <!-- Card 2 hint -->
+      <div style="background:white;border-radius:10px;padding:10px 12px;box-shadow:0 2px 8px rgba(139,101,58,0.08);border:1px solid rgba(196,149,74,0.15);opacity:0.7;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <div style="width:3px;height:14px;background:linear-gradient(180deg,#c4954a,#8b653a);border-radius:2px;"></div>
+          <div style="font-size:11px;font-weight:700;color:#3d2b10;letter-spacing:1px;">二、梅花易数</div>
+          <div style="margin-left:auto;font-size:9px;color:#9b7d5a;">早年·中年·晚年</div>
+        </div>
+        <div style="margin-top:6px;height:30px;background:#fdfaf5;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+          <div style="font-size:9px;color:#c4954a;">···</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Option B: 双栏仪表盘 -->
+  <div class="mockup" data-choice="b" onclick="toggleSelect(this)" style="cursor:pointer;">
+    <div class="mockup-header">B · 双栏仪表盘 — 信息密度高</div>
+    <div class="mockup-body" style="background:linear-gradient(160deg,#fdfaf5,#f7f0e6);padding:12px;font-family:sans-serif;min-height:400px;">
+      <!-- Header -->
+      <div style="background:linear-gradient(135deg,#8b653a,#c4954a);border-radius:10px;padding:10px 12px;margin-bottom:8px;color:white;display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div style="font-size:13px;font-weight:700;letter-spacing:1px;">张伟 命理报告</div>
+          <div style="font-size:9px;opacity:0.8;margin-top:1px;">1990-03-15 · 属马</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:28px;font-weight:800;line-height:1;">82</div>
+          <div style="font-size:8px;opacity:0.7;">综合评分</div>
+        </div>
+      </div>
+      <!-- Two column -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <!-- Left col -->
+        <div>
+          <div style="background:white;border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(139,101,58,0.08);border:1px solid rgba(196,149,74,0.15);margin-bottom:8px;">
+            <div style="font-size:9px;font-weight:700;color:#3d2b10;letter-spacing:1px;border-bottom:1px solid rgba(196,149,74,0.15);padding-bottom:5px;margin-bottom:6px;">一、笔画格局</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+              <div style="text-align:center;background:#fef3e2;border-radius:5px;padding:4px;"><div style="font-size:8px;color:#9b7d5a;">天格</div><div style="font-size:13px;font-weight:700;color:#3d2b10;">15</div><div style="font-size:7px;color:#c4954a;">大吉</div></div>
+              <div style="text-align:center;background:#fef3e2;border-radius:5px;padding:4px;"><div style="font-size:8px;color:#9b7d5a;">人格</div><div style="font-size:13px;font-weight:700;color:#3d2b10;">23</div><div style="font-size:7px;color:#c4954a;">大吉</div></div>
+              <div style="text-align:center;background:#edf7f0;border-radius:5px;padding:4px;"><div style="font-size:8px;color:#9b7d5a;">地格</div><div style="font-size:13px;font-weight:700;color:#3d2b10;">18</div><div style="font-size:7px;color:#2d7a4f;">吉</div></div>
+              <div style="text-align:center;background:#f5f5f0;border-radius:5px;padding:4px;"><div style="font-size:8px;color:#9b7d5a;">总格</div><div style="font-size:13px;font-weight:700;color:#3d2b10;">31</div><div style="font-size:7px;color:#9b7d5a;">半吉</div></div>
+            </div>
+          </div>
+          <div style="background:white;border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(139,101,58,0.08);border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:9px;font-weight:700;color:#3d2b10;letter-spacing:1px;border-bottom:1px solid rgba(196,149,74,0.15);padding-bottom:5px;margin-bottom:6px;">三、干支能量</div>
+            <div style="display:flex;flex-direction:column;gap:3px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:9px;color:#9b7d5a;">命主天干</span><span style="font-size:9px;color:#3d2b10;font-weight:600;">庚（金）</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:9px;color:#9b7d5a;">吉性能量点</span><span style="font-size:9px;background:#fef3e2;color:#c4954a;padding:1px 6px;border-radius:8px;">7/10</span></div>
+              <div style="background:#f3e9d8;border-radius:4px;height:6px;overflow:hidden;"><div style="background:linear-gradient(90deg,#c4954a,#8b653a);width:70%;height:100%;border-radius:4px;"></div></div>
+            </div>
+          </div>
+        </div>
+        <!-- Right col -->
+        <div>
+          <div style="background:white;border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(139,101,58,0.08);border:1px solid rgba(196,149,74,0.15);">
+            <div style="font-size:9px;font-weight:700;color:#3d2b10;letter-spacing:1px;border-bottom:1px solid rgba(196,149,74,0.15);padding-bottom:5px;margin-bottom:6px;">二、梅花易数</div>
+            <div style="display:flex;flex-direction:column;gap:5px;">
+              <div style="background:linear-gradient(135deg,#fef3e2,#fdf5e8);border-radius:6px;padding:6px;">
+                <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:8px;color:#9b7d5a;">早年（本卦）</span><span style="font-size:8px;font-weight:600;color:#c4954a;">大吉</span></div>
+                <div style="font-size:8px;color:#5c3d1e;">乾为天 · 自强不息</div>
+              </div>
+              <div style="background:#fdfaf5;border-radius:6px;padding:6px;border:1px solid rgba(196,149,74,0.1);">
+                <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:8px;color:#9b7d5a;">中年（互卦）</span><span style="font-size:8px;font-weight:600;color:#2d7a4f;">吉</span></div>
+                <div style="font-size:8px;color:#5c3d1e;">坤为地 · 厚德载物</div>
+              </div>
+              <div style="background:#fdfaf5;border-radius:6px;padding:6px;border:1px solid rgba(196,149,74,0.1);">
+                <div style="display:flex;justify-content:space-between;margin-bottom:2px;"><span style="font-size:8px;color:#9b7d5a;">晚年（变卦）</span><span style="font-size:8px;font-weight:600;color:#9b7d5a;">小吉</span></div>
+                <div style="font-size:8px;color:#5c3d1e;">水雷屯 · 先苦后甜</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Bottom rule text -->
+      <div style="background:white;border-radius:8px;padding:8px;box-shadow:0 2px 8px rgba(139,101,58,0.08);border:1px solid rgba(196,149,74,0.15);">
+        <div style="font-size:9px;font-weight:700;color:#3d2b10;letter-spacing:1px;border-bottom:1px solid rgba(196,149,74,0.15);padding-bottom:4px;margin-bottom:5px;">四、综合解析</div>
+        <div style="font-size:9px;color:#5c3d1e;line-height:1.6;">整体来看，此名笔画格局优良，梅花易数早年运势吉祥，综合评定为上佳之名...</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px;">A：沉浸式阅读，逐卡展开，适合细细品读每个维度；B：仪表盘风格，一屏看全，信息密度高</p>
