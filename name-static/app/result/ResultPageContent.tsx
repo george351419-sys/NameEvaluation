@@ -1,7 +1,11 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { prisma } from "@/lib/db";
 import { analyze } from "@/lib/analyze";
+import { getEvaluation } from "@/lib/storage";
+import type { StoredEvaluation } from "@/lib/storage";
 import { StrokeAnalysisCard } from "@/components/name/StrokeAnalysis";
 import { PlumBlossomCard } from "@/components/name/PlumBlossomAnalysis";
 import { EnergyMatrixCard } from "@/components/name/EnergyMatrix";
@@ -10,30 +14,46 @@ import { ComparePickerButton } from "@/components/name/ComparePickerButton";
 import { ShareButton } from "@/components/name/ShareButton";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { AnalysisResult } from "@/types";
 
-interface Props {
-  params: Promise<{ id: string }>;
-}
+export default function ResultPageContent() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id") ?? "";
+  const [evaluation, setEvaluation] = useState<StoredEvaluation | null>(null);
+  const [result, setResult] = useState<AnalysisResult | null>(null);
+  const [notFound, setNotFound] = useState(false);
 
-export default async function ResultPage({ params }: Props) {
-  const { id } = await params;
-  const evaluation = await prisma.evaluation.findUnique({ where: { id } });
+  useEffect(() => {
+    if (!id) { setNotFound(true); return; }
+    const ev = getEvaluation(id);
+    if (!ev) { setNotFound(true); return; }
+    setEvaluation(ev);
+    setResult(analyze({
+      surname: ev.surname,
+      givenName: ev.givenName,
+      birthDate: ev.birthDate,
+      isLunar: ev.isLunar,
+      zodiacOverride: ev.zodiacOverride,
+      fatherSurname: ev.fatherSurname,
+      fatherZodiac: ev.fatherZodiac,
+      motherSurname: ev.motherSurname,
+      motherZodiac: ev.motherZodiac,
+      childZodiac: ev.childZodiac,
+    }));
+  }, [id]);
 
-  if (!evaluation) notFound();
+  if (notFound) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 text-muted-foreground">
+        <p>记录不存在或已被删除</p>
+        <Link href="/" className={cn(buttonVariants())}>返回首页</Link>
+      </div>
+    );
+  }
 
-  // 每次加载都用最新算法重新计算，不读旧的 resultJson
-  const result = analyze({
-    surname: evaluation.surname,
-    givenName: evaluation.givenName,
-    birthDate: evaluation.birthDate,
-    isLunar: evaluation.isLunar,
-    zodiacOverride: evaluation.zodiacOverride ?? undefined,
-    fatherSurname: evaluation.fatherSurname ?? undefined,
-    fatherZodiac: evaluation.fatherZodiac ?? undefined,
-    motherSurname: evaluation.motherSurname ?? undefined,
-    motherZodiac: evaluation.motherZodiac ?? undefined,
-    childZodiac: evaluation.childZodiac ?? undefined,
-  });
+  if (!result || !evaluation) {
+    return <div className="min-h-screen flex items-center justify-center text-muted-foreground">加载中...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-amber-50 to-white">
@@ -50,15 +70,12 @@ export default async function ResultPage({ params }: Props) {
               </p>
             </div>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap justify-end">
             <Link href="/history" className={cn(buttonVariants({ variant: "default", size: "sm" }))}>
               ← 返回记录
             </Link>
             <ShareButton name={`${evaluation.surname}${evaluation.givenName}`} />
             <ComparePickerButton currentId={id} />
-            <Link href={`/?edit=${id}`} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
-              编辑重算
-            </Link>
             <Link href="/" className={cn(buttonVariants({ variant: "ghost", size: "sm" }))}>
               新评测
             </Link>
@@ -70,9 +87,7 @@ export default async function ResultPage({ params }: Props) {
         <StrokeAnalysisCard data={result.strokeAnalysis} />
         <PlumBlossomCard data={result.plumBlossom} />
         <EnergyMatrixCard data={result.energyAnalysis} />
-        <AIInterpretation analysisResult={result} evaluationId={id} modelName={
-          process.env.LLM_PROVIDER === "minimax" ? "MiniMax" : "DeepSeek"
-        } />
+        <AIInterpretation analysisResult={result} />
       </main>
     </div>
   );
