@@ -12,12 +12,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { NINE_STAR_MEANING } from "@/lib/energyPoints";
 
 const FORTUNE_COLOR: Record<string, string> = {
-  大吉: "bg-green-200 text-green-900 border-green-300",
-  吉: "bg-green-100 text-green-800",
-  小吉: "bg-lime-100 text-lime-800",
-  小凶: "bg-orange-100 text-orange-800",
-  凶: "bg-red-100 text-red-800",
-  大凶: "bg-red-200 text-red-900 border-red-300",
+  大吉: "bg-[#fef3e2] text-[#9a6820] border border-[rgba(196,149,74,0.3)]",
+  吉:   "bg-[#edf7f0] text-[#2d7a4f] border border-[rgba(45,122,79,0.2)]",
+  小吉: "bg-[#e8f4fd] text-[#2a6496] border border-[rgba(42,100,150,0.2)]",
+  小凶: "bg-[#fdf4f4] text-[#b05050] border border-[rgba(176,80,80,0.2)]",
+  凶:   "bg-[#fef0f0] text-[#a04040] border border-[rgba(160,64,64,0.2)]",
+  大凶: "bg-[#f5e6e6] text-[#7a1a1a] border border-[rgba(122,26,26,0.2)]",
 };
 
 const FORTUNE_ORDER: EnergyFortune[] = ["大吉", "吉", "小吉", "小凶", "凶", "大凶"];

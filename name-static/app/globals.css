@@ -181,3 +181,30 @@
   border-radius: 2px;
   flex-shrink: 0;
 }
+
+/* 小凶等级徽标 */
+.fortune-小凶 { background: #fdf4f4; color: #b05050; border: 1px solid rgba(176,80,80,0.2); }
+
+/* 山水淡雅全局卡片样式 */
+[data-slot="card"] {
+  border-radius: 14px !important;
+  box-shadow: 0 0 0 1px rgba(196,149,74,0.18), 0 4px 20px rgba(139,101,58,0.08) !important;
+}
+
+[data-slot="card-title"] {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  color: #3d2b10;
+  letter-spacing: 0.5px;
+}
+
+[data-slot="card-title"]::before {
+  content: '';
+  width: 3px;
+  height: 18px;
+  background: linear-gradient(180deg, #c4954a, #8b653a);
+  border-radius: 2px;
+  flex-shrink: 0;
+}

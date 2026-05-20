@@ -16,7 +16,7 @@ export function AIInterpretation({ analysisResult }: Props) {
     <Card>
       <CardHeader>
         <CardTitle>四、命理综合解析</CardTitle>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="text-sm mt-1" style={{ color: "#9b7d5a" }}>
           基于三大模块排盘结果生成命理解读
         </p>
       </CardHeader>
