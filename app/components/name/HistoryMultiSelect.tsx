@@ -14,7 +14,7 @@ interface EvaluationItem {
   givenName: string;
   birthDate: string;
   isLunar: boolean;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface Props {

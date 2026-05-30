@@ -21,6 +21,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       where: { id },
       data: { interpretation: body.interpretation },
     });
+    if (!ev) return NextResponse.json({ error: "未找到" }, { status: 404 });
     return NextResponse.json({ id: ev.id });
   } catch (error) {
     console.error("PATCH company evaluation error:", error);

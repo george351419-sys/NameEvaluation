@@ -17,14 +17,14 @@ interface PersonalItem {
   givenName: string;
   birthDate: string;
   isLunar: boolean;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface CompanyItem {
   id: string;
   companyName: string;
   founderName: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface NamingItem {
@@ -35,7 +35,7 @@ interface NamingItem {
   fatherZodiac: string | null;
   motherSurname: string;
   motherZodiac: string;
-  createdAt: Date;
+  createdAt: string;
 }
 
 interface Props {

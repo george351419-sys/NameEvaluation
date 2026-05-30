@@ -7,3 +7,4 @@ app/prisma/dev.db
 app/prisma/dev.db-journal
 app/dev.db
 app/dev.db-journal
+app/data/
